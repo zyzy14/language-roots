@@ -20,20 +20,21 @@
 │   ├── data.js             # 由 data/*.json 生成的全局数据（勿手改）
 │   └── app.js              # 全部渲染逻辑（图谱/搜索/模式/地图/抽屉）
 ├── data/                   # ★ 内容数据源：改这里 = 改网站
-│   ├── languages.json      # 54 种语言（name/tree/fact/example/meme）
-│   ├── categories.json     # 8 个语系/语族科普
+│   ├── languages.json      # 68 种语言（name/tree/fact/example/meme）
+│   ├── categories.json     # 语系/语族科普
 │   ├── geo_regions.json    # 语言 → 国家/区域映射
-│   └── geo_coords.json     # 105 个国家中心点坐标
+│   └── geo_coords.json     # 111 个国家中心点坐标
+├── scripts/
+│   └── build-data.js       # JSON → js/data.js 生成脚本（改数据后重跑）
 ├── vendor/                 # 本地化依赖（完全离线自包含）
 │   ├── vis-network.min.js
 │   ├── lucide.min.js
 │   └── tailwind.js
-├── reference/
-│   └── original-site.html  # 造物云原始站点备份
-├── deploy.sh               # 一键部署到 GitHub Pages
+├── deploy-github.sh        # GitHub Pages 部署脚本（需 GH_TOKEN）
+├── deploy-netlify.sh       # Netlify 部署脚本
+├── deploy.sh               # 通用部署入口
 ├── netlify.toml            # Netlify 部署配置
-├── vercel.json             # Vercel 部署配置
-└── .github/workflows/deploy.yml  # GitHub Pages Actions
+└── vercel.json             # Vercel 部署配置
 ```
 
 ## 🔧 本地预览
@@ -44,21 +45,25 @@ python3 -m http.server 8765
 # 浏览器打开 http://localhost:8765
 ```
 
-## 🚀 部署（任选其一）
+## 🚀 部署与更新（当前实际方式）
 
-### 方式 A：GitHub Pages（推荐，免费·全球）
-```bash
-gh auth login            # 首次需登录
-./deploy.sh              # 自动提交并推送到 main，Actions 自动部署
+**线上站点**：https://zyzy14.github.io/language-roots/
+**仓库**：https://github.com/zyzy14/language-roots（公开）
+
+### 日常更新：push 即上线
+GitHub Pages 已设为「从 `master` 分支构建」，**只要 push 到 `master`，网站就自动重建并上线**——无需 Actions、无需额外操作。
+
 ```
-> 首次部署后到仓库 **Settings → Pages** 确认 Source = `GitHub Actions`。
+你改 /workspace  →  git commit  →  git push origin master  →  GitHub Pages 自动重建  →  网址更新
+```
 
-### 方式 B：Netlify / Vercel
-- Netlify：拖拽整个文件夹到 [app.netlify.com/drop](https://app.netlify.com/drop)，或连接 Git 仓库（已含 `netlify.toml`）。
-- Vercel：导入 Git 仓库（已含 `vercel.json`），或 `vercel deploy`。
+- 仓库已移除 `.github/workflows/deploy.yml`，因此**普通 PAT（无需 `workflow` 权限）也能推送**。
+- 本地 `/workspace` 就是「源」，GitHub 仓库是「发布副本」，公网网址是「对外窗口」。
 
-### 方式 C：任意静态托管 / 对象存储
-直接把整个文件夹上传到 GitHub Pages、Cloudflare Pages、对象存储（OSS/COS）+ CDN、或原造物云的静态目录即可——纯静态，零服务端依赖。
+### 其他托管方式（任选）
+- **Netlify**：拖拽整个文件夹到 [app.netlify.com/drop](https://app.netlify.com/drop)，或连接 Git 仓库（已含 `netlify.toml`）。
+- **Vercel**：导入 Git 仓库（已含 `vercel.json`），或 `vercel deploy`。
+- **任意静态托管 / 对象存储**：纯静态、零服务端依赖，直接上传整个文件夹即可。
 
 ### 自定义域名
 在仓库根放一个 `CNAME` 文件，内容为你的域名（如 `language-roots.example.com`），并在 DNS 处做相应解析。
