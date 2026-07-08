@@ -542,7 +542,13 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
           <p class="text-[13px] text-slate-400 leading-relaxed mt-2.5">${vit.note}</p>
         </div>` : '';
 
+      const onShelf = isOnShelf(dbKey);
       document.getElementById('d-body').innerHTML = `
+        <button id="d-shelfBtn" class="d-shelf-btn ${onShelf ? 'on' : ''}" data-shelf>
+          <i data-lucide="star" class="w-4 h-4"></i>
+          <span>${onShelf ? '已在我的语言架' : '收进我的语言架'}</span>
+        </button>
+
         <!-- 第一层（始终可见）：一句加粗冷知识暴击 -->
         <div class="fade-up px-4 pt-1 pb-5">
           <div class="flex items-center gap-1.5 mb-2.5 text-emerald/80">
@@ -589,6 +595,16 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       // 🔊 发音朗读按钮
       const _sb = document.querySelector('#d-body [data-speak]');
       if (_sb) _sb.addEventListener('click', (e) => { e.stopPropagation(); speakText(_sb.dataset.speak, _sb, _sb.dataset.lang); });
+
+      // ⭐ 抽屉内「收藏到我的语言架」按钮
+      const _sh = document.getElementById('d-shelfBtn');
+      if (_sh) _sh.addEventListener('click', () => {
+        toggleShelf(dbKey);
+        const on = isOnShelf(dbKey);
+        _sh.classList.toggle('on', on);
+        _sh.querySelector('span').textContent = on ? '已在我的语言架' : '收进我的语言架';
+        lucide.createIcons();
+      });
 
       bindAccordions();
 
@@ -1916,6 +1932,173 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
     }
     const quizFab = document.getElementById('quizFab');
     if (quizFab) quizFab.addEventListener('click', openQuiz);
+
+    /* =========================================================
+       12. 随机抽卡 + 我的语言架（localStorage 收藏）
+       ========================================================= */
+    const SHELF_KEY = 'langroots.shelf.v1';
+    function getShelf() {
+      try { const a = JSON.parse(localStorage.getItem(SHELF_KEY)); return Array.isArray(a) ? a : []; }
+      catch (e) { return []; }
+    }
+    function setShelf(arr) {
+      try { localStorage.setItem(SHELF_KEY, JSON.stringify(arr)); } catch (e) {}
+      updateShelfBadge();
+    }
+    function isOnShelf(k) { return getShelf().indexOf(k) !== -1; }
+    function toggleShelf(k) {
+      let arr = getShelf();
+      if (arr.indexOf(k) !== -1) { arr = arr.filter(x => x !== k); showToast('已移出「我的语言架」'); }
+      else { arr.unshift(k); showToast('已收进「我的语言架」 ⭐'); }
+      setShelf(arr);
+    }
+    function updateShelfBadge() {
+      const badge = document.getElementById('shelfBadge');
+      if (!badge) return;
+      const n = getShelf().length;
+      badge.textContent = n;
+      badge.hidden = n === 0;
+    }
+
+    // ---- 随机抽卡 ----
+    const drawOverlay = document.getElementById('drawOverlay');
+    let drawTimer = null;
+    function openDraw() {
+      clearInterval(drawTimer);
+      drawOverlay.querySelector('.draw-card').innerHTML = `
+        <div class="draw-kicker"><i data-lucide="dices" class="w-4 h-4"></i> 语言抽卡</div>
+        <h2 class="draw-title">抽一张语言卡</h2>
+        <p class="draw-sub">对 68 种语言毫无准备地随机遇见——也许，就是你一直在找的那一门。</p>
+        <button class="draw-roll" data-act="roll">🎰 开始抽卡</button>
+        <p class="draw-foot">抽到可听原音 · 可一键收进「我的语言架」</p>`;
+      drawOverlay.classList.remove('hidden');
+      requestAnimationFrame(() => drawOverlay.classList.add('show'));
+      lucide.createIcons();
+    }
+    function closeDraw() {
+      clearInterval(drawTimer);
+      drawOverlay.classList.remove('show');
+      setTimeout(() => drawOverlay.classList.add('hidden'), 280);
+    }
+    function rollDraw() {
+      const keys = Object.keys(languageDatabase);
+      const card = drawOverlay.querySelector('.draw-card');
+      card.innerHTML = `
+        <div class="draw-kicker"><i data-lucide="dices" class="w-4 h-4"></i> 语言抽卡</div>
+        <div class="draw-shuffle"><span class="draw-shuffle-name">…</span></div>
+        <div class="draw-shuffle-tip">命运正在 shuffling……</div>`;
+      lucide.createIcons();
+      const nameEl = card.querySelector('.draw-shuffle-name');
+      let ticks = 0; const total = 16;
+      clearInterval(drawTimer);
+      drawTimer = setInterval(() => {
+        ticks++;
+        const k = keys[Math.floor(Math.random() * keys.length)];
+        nameEl.textContent = languageDatabase[k].name.split(' ')[0];
+        if (ticks >= total) { clearInterval(drawTimer); renderDrawReveal(keys[Math.floor(Math.random() * keys.length)]); }
+      }, 70);
+    }
+    function renderDrawReveal(key) {
+      const L = languageDatabase[key]; if (!L) return;
+      const fam = (LEAF_PATHS[key] || [])[0] || '';
+      const famColor = langColorOf(key);
+      const ex = parseExample(L.example);
+      const speakLang = LOCALE_BY_KEY[key];
+      const speakPhrase = cleanPhrase(ex.phrase);
+      const canSpeak = !!speakLang && !!speakPhrase;
+      const onShelf = isOnShelf(key);
+      drawOverlay.querySelector('.draw-card').innerHTML = `
+        <div class="draw-reveal">
+          <div class="draw-reveal-family" style="color:${famColor};border-color:${famColor}55;background:${famColor}1a">${fam || '其他'}</div>
+          <h2 class="draw-result-name" style="color:${famColor}">${L.name}</h2>
+          <p class="draw-result-punch">${clampFact(L.fact, 60)}</p>
+          ${ex.phrase ? `<div class="draw-result-phrase">
+              <span class="text-[20px] font-bold text-slate-50" dir="auto">${ex.phrase}</span>
+              ${canSpeak ? `<button class="speak-btn" data-speak="${escAttr(speakPhrase)}" data-lang="${escAttr(speakLang)}" title="听原音"><i data-lucide="volume-2" class="w-3.5 h-3.5"></i></button>` : ''}
+            </div>` : ''}
+          <div class="draw-result-actions">
+            <button class="draw-again" data-act="roll">🎰 再抽一张</button>
+            <button class="draw-detail" data-act="go" data-key="${escAttr(key)}" style="background:${famColor}">看完整档案</button>
+          </div>
+          <button class="draw-shelf ${onShelf ? 'on' : ''}" data-act="shelf" data-key="${escAttr(key)}">${onShelf ? '★ 已在我的语言架' : '☆ 收进我的语言架'}</button>
+        </div>`;
+      lucide.createIcons();
+    }
+    if (drawOverlay) {
+      drawOverlay.addEventListener('click', (e) => {
+        if (e.target === drawOverlay) { closeDraw(); return; }
+        const sp = e.target.closest('[data-speak]');
+        if (sp) { e.stopPropagation(); speakText(sp.dataset.speak, sp, sp.dataset.lang); return; }
+        const roll = e.target.closest('[data-act="roll"]');
+        if (roll) { rollDraw(); return; }
+        const go = e.target.closest('[data-act="go"]');
+        if (go) { const k = go.dataset.key; closeDraw(); if (languageDatabase[k]) openLanguage(k); return; }
+        const sh = e.target.closest('[data-act="shelf"]');
+        if (sh) {
+          const k = sh.dataset.key; toggleShelf(k);
+          const on = isOnShelf(k);
+          sh.classList.toggle('on', on);
+          sh.textContent = on ? '★ 已在我的语言架' : '☆ 收进我的语言架';
+          return;
+        }
+      });
+    }
+    const drawFab = document.getElementById('drawFab');
+    if (drawFab) drawFab.addEventListener('click', openDraw);
+
+    // ---- 我的语言架 ----
+    const shelfOverlay = document.getElementById('shelfOverlay');
+    function openShelf() { renderShelf(); shelfOverlay.classList.remove('hidden'); requestAnimationFrame(() => shelfOverlay.classList.add('show')); }
+    function closeShelf() { shelfOverlay.classList.remove('show'); setTimeout(() => shelfOverlay.classList.add('hidden'), 280); }
+    function shelfRow(k) {
+      const L = languageDatabase[k]; if (!L) return '';
+      const fam = (LEAF_PATHS[k] || [])[0] || '';
+      const famColor = langColorOf(k);
+      return `<div class="shelf-row" data-key="${escAttr(k)}">
+        <span class="shelf-dot" style="background:${famColor}"></span>
+        <div class="shelf-row-main">
+          <div class="shelf-row-name">${L.name.split(' ')[0]}</div>
+          <div class="shelf-row-fam">${fam || '其他'}</div>
+        </div>
+        <button class="shelf-open" data-act="open" data-key="${escAttr(k)}">查看</button>
+        <button class="shelf-remove" data-act="remove" data-key="${escAttr(k)}" title="移出语言架"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>`;
+    }
+    function renderShelf() {
+      const arr = getShelf();
+      const body = arr.length
+        ? `<div class="shelf-list">${arr.map(shelfRow).join('')}</div>`
+        : `<div class="shelf-empty">
+             <i data-lucide="book-heart" class="w-10 h-10"></i>
+             <p>你的语言架还空着。</p>
+             <p class="shelf-empty-sub">翻开任意语言卡点 ⭐，或去「语言抽卡」遇见缘分。</p>
+           </div>`;
+      shelfOverlay.querySelector('.shelf-card').innerHTML = `
+        <div class="shelf-head">
+          <div class="shelf-title"><i data-lucide="library" class="w-5 h-5"></i> 我的语言架 <span class="shelf-count">${arr.length}</span></div>
+          <div class="flex gap-2">
+            ${arr.length ? `<button class="shelf-clear" data-act="clear">清空</button>` : ''}
+            <button class="shelf-close" data-act="close"><i data-lucide="x" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+        ${body}`;
+      lucide.createIcons();
+    }
+    if (shelfOverlay) {
+      shelfOverlay.addEventListener('click', (e) => {
+        if (e.target === shelfOverlay) { closeShelf(); return; }
+        const close = e.target.closest('[data-act="close"]'); if (close) { closeShelf(); return; }
+        const clear = e.target.closest('[data-act="clear"]'); if (clear) { setShelf([]); renderShelf(); showToast('已清空语言架'); return; }
+        const remove = e.target.closest('[data-act="remove"]'); if (remove) { const arr = getShelf().filter(x => x !== remove.dataset.key); setShelf(arr); renderShelf(); return; }
+        const open = e.target.closest('[data-act="open"]'); if (open) { const k = open.dataset.key; closeShelf(); if (languageDatabase[k]) openLanguage(k); return; }
+        const row = e.target.closest('.shelf-row'); if (row && languageDatabase[row.dataset.key]) { closeShelf(); openLanguage(row.dataset.key); }
+      });
+    }
+    const shelfFab = document.getElementById('shelfFab');
+    if (shelfFab) shelfFab.addEventListener('click', openShelf);
+
+    // 首屏初始化语言架徽标
+    updateShelfBadge();
 
     const shareBtn = document.getElementById('shareBtn');
     if (shareBtn) shareBtn.addEventListener('click', copyShareLink);
