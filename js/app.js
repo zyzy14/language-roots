@@ -415,14 +415,40 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;')
         .replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
-    // 🔊 浏览器 TTS 朗读（默认用中文嗓读「拟音」，最接近母语者的近似发音）
-    function speakText(text, btn) {
+    // 每种语言的 TTS 发音 locale（BCP-47），用于「听原音」时挑对应语种的嗓音。
+    // 值为 null 表示该语言没有口语发音（如手语），此时不显示朗读按钮。
+    const LOCALE_BY_KEY = {
+      '法文':'fr-FR','意大利文':'it-IT','德文':'de-DE','俄文':'ru-RU','印地文':'hi-IN',
+      '中文':'zh-CN','藏文':'bo-CN','日文':'ja-JP','韩文':'ko-KR','阿拉伯文':'ar-SA',
+      '希伯来文':'he-IL','印度尼西亚文':'id-ID','越南文':'vi-VN','匈牙利文':'hu-HU','土耳其文':'tr-TR',
+      '巴斯克文':'eu-ES','瑞典文':'sv-SE','西班牙文':'es-ES','高棉文':'km-KH','泰文':'th-TH',
+      '斯瓦希里语':'sw-KE','祖鲁语':'zu-ZA','纳瓦霍语':'nv','毛利语':'mi-NZ','英语':'en-US',
+      '荷兰语':'nl-NL','挪威语':'nb-NO','丹麦语':'da-DK','冰岛语':'is-IS','葡萄牙语':'pt-PT',
+      '罗马尼亚语':'ro-RO','乌克兰语':'uk-UA','波兰语':'pl-PL','捷克语':'cs-CZ','塞尔维亚语':'sr-RS',
+      '保加利亚语':'bg-BG','波斯语':'fa-IR','希腊语':'el-GR','缅甸语':'my-MM','约鲁巴语':'yo-NG',
+      '绍纳语':'sn-ZW','切罗基语':'chr','玛雅语':'yua','克丘亚语':'qu-PE','芬兰语':'fi-FI',
+      '爱沙尼亚语':'et-EE','阿伊努语':'ain','夏威夷语':'haw-US','威尔士语':'cy-GB','爱尔兰语':'ga-IE',
+      '布列塔尼语':'br-FR','苏格兰盖尔语':'gd-GB','格陵兰语':'kl-GL','纳瓦特尔语':'nah','泰米尔语':'ta-IN',
+      '粤语':'zh-HK','孟加拉语':'bn-BD','豪萨语':'ha-NG','蒙古语':'mn-MN','马来语':'ms-MY',
+      '普什图语':'ps-AF','梵语':'sa-IN','世界语':'eo','美国手语':null,'瓜拉尼语':'gn-PY',
+      '阿姆哈拉语':'am-ET','菲律宾语':'fil-PH','海地克里奥尔语':'ht-HT'
+    };
+    // 把例句原文清洗为「纯原语言词」：先去括号内中文释义，再清首尾引号，保留词内撇号（如 t'aime）
+    function cleanPhrase(p) {
+      return String(p || '')
+        .replace(/\s*[（(][^（）()]*[)）]\s*/g, '')        // 去括号及其中文释义
+        .replace(/^\s*['"‘’]+/, '')                        // 去开头的引号
+        .replace(/['"‘’]+\s*$/g, '')                       // 去结尾的引号
+        .replace(/\s+/g, ' ').trim();
+    }
+    // 🔊 浏览器 TTS 朗读：读「原语言词」并用对应语种嗓音（lang 缺省回退中文）
+    function speakText(text, btn, lang) {
       if (!text) return;
       if (!('speechSynthesis' in window)) { showToast('当前浏览器不支持语音朗读'); return; }
       try {
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'zh-CN'; u.rate = 0.95; u.pitch = 1;
+        u.lang = lang || 'zh-CN'; u.rate = 0.92; u.pitch = 1;
         if (btn) {
           btn.classList.add('speaking');
           u.onend = u.onerror = () => btn.classList.remove('speaking');
@@ -473,6 +499,9 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       }).join('');
 
       const ex = parseExample(L.example);
+      const speakLang = LOCALE_BY_KEY[dbKey];          // 手语等无口语语言为 null
+      const speakPhrase = cleanPhrase(ex.phrase);       // 纯原语言词，供 TTS 朗读
+      const canSpeak = !!speakLang && !!speakPhrase;
       const exampleHtml = ex.phrase ? `
           <p class="text-[26px] font-bold text-slate-50 leading-snug break-words tracking-tight" dir="auto">${ex.phrase}</p>
           <div class="mt-3.5 flex items-start gap-2.5">
@@ -480,7 +509,7 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
             <div>
               <div class="flex items-center gap-2">
                 <p class="text-[15px] font-semibold text-brand leading-tight">拟音 · ${ex.pron}</p>
-                <button class="speak-btn" data-speak="${escAttr(ex.pron)}" title="听一听发音" aria-label="听发音"><i data-lucide="volume-2" class="w-3.5 h-3.5"></i></button>
+                ${canSpeak ? `<button class="speak-btn" data-speak="${escAttr(speakPhrase)}" data-lang="${escAttr(speakLang)}" title="听这门语言的原音" aria-label="听原音"><i data-lucide="volume-2" class="w-3.5 h-3.5"></i></button><span class="text-[11px] text-slate-500">原音</span>` : ''}
               </div>
               <p class="text-[13.5px] text-slate-400 leading-relaxed mt-1.5">${ex.feature}</p>
             </div>
@@ -559,7 +588,7 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
 
       // 🔊 发音朗读按钮
       const _sb = document.querySelector('#d-body [data-speak]');
-      if (_sb) _sb.addEventListener('click', (e) => { e.stopPropagation(); speakText(_sb.dataset.speak, _sb); });
+      if (_sb) _sb.addEventListener('click', (e) => { e.stopPropagation(); speakText(_sb.dataset.speak, _sb, _sb.dataset.lang); });
 
       bindAccordions();
 
