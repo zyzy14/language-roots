@@ -1,0 +1,7 @@
+[build]
+  # 纯静态站点，无需构建；发布目录即仓库根
+  publish = "."
+
+[dev]
+  command = "python3 -m http.server 8765"
+  port = 8765

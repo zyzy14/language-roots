@@ -1,0 +1,12 @@
+node_modules/
+.cache/
+*.log
+.DS_Store
+__pycache__/
+
+# —— 不进 Pages 公开仓库的本地产物 ——
+.github/workflows/
+preview*.png
+prototype.html
+reference/
+language-roots-deploy.zip
