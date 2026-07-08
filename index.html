@@ -172,6 +172,13 @@
 
   <div id="scrim" class="fixed inset-0 z-20 bg-black/0 hidden"></div>
 
+  <!-- 语言人格测试：悬浮入口 + 覆盖层 -->
+  <button id="quizFab" title="测测你的语言人格">
+    <i data-lucide="sparkles" class="w-[18px] h-[18px]"></i>
+    <span>语言人格测试</span>
+  </button>
+  <div id="quizOverlay" class="quiz-overlay hidden"><div class="quiz-card"></div></div>
+
   <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 glass rounded-xl px-4 py-2.5 text-sm text-slate-200 opacity-0 pointer-events-none flex items-center gap-2 max-w-[90vw]">
     <i data-lucide="telescope" class="w-4 h-4 text-brand shrink-0"></i>
     <span id="toastText"></span>

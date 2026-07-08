@@ -410,6 +410,27 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       return { phrase: '', pron: '', feature: str };
     }
 
+    // 属性转义（用于把文本安全塞进 data-* 属性）
+    function escAttr(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    // 🔊 浏览器 TTS 朗读（默认用中文嗓读「拟音」，最接近母语者的近似发音）
+    function speakText(text, btn) {
+      if (!text) return;
+      if (!('speechSynthesis' in window)) { showToast('当前浏览器不支持语音朗读'); return; }
+      try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'zh-CN'; u.rate = 0.95; u.pitch = 1;
+        if (btn) {
+          btn.classList.add('speaking');
+          u.onend = u.onerror = () => btn.classList.remove('speaking');
+        }
+        window.speechSynthesis.speak(u);
+      } catch (e) { showToast('朗读失败'); }
+    }
+
     /* ---- 统一的抽屉绘制器：支持淡入淡出丝滑切换 ----
        paint 为真正写入内容的回调。
        - 抽屉已展开：先把 #d-inner 淡出，替换内容后再淡入（内容级过渡）。
@@ -457,7 +478,10 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
           <div class="mt-3.5 flex items-start gap-2.5">
             <i data-lucide="ear" class="w-4 h-4 text-brand mt-1 shrink-0"></i>
             <div>
-              <p class="text-[15px] font-semibold text-brand leading-tight">拟音 · ${ex.pron}</p>
+              <div class="flex items-center gap-2">
+                <p class="text-[15px] font-semibold text-brand leading-tight">拟音 · ${ex.pron}</p>
+                <button class="speak-btn" data-speak="${escAttr(ex.pron)}" title="听一听发音" aria-label="听发音"><i data-lucide="volume-2" class="w-3.5 h-3.5"></i></button>
+              </div>
               <p class="text-[13.5px] text-slate-400 leading-relaxed mt-1.5">${ex.feature}</p>
             </div>
           </div>
@@ -532,6 +556,10 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
           </div></div></div>
         </div>
       `;
+
+      // 🔊 发音朗读按钮
+      const _sb = document.querySelector('#d-body [data-speak]');
+      if (_sb) _sb.addEventListener('click', (e) => { e.stopPropagation(); speakText(_sb.dataset.speak, _sb); });
 
       bindAccordions();
 
@@ -1664,8 +1692,10 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
        —— 打开语言即同步地址栏；加载 / 前进后退即还原 —— */
     let _suppressHash = false;
     function parseHash() {
-      const m = (location.hash || '').match(/^#\/lang\/(.+)$/);
+      let m = (location.hash || '').match(/^#\/lang\/(.+)$/);
       if (m) return { type: 'lang', key: decodeURIComponent(m[1]) };
+      m = (location.hash || '').match(/^#\/quiz\/(.+)$/);
+      if (m) return { type: 'quiz', key: decodeURIComponent(m[1]) };
       return null;
     }
     function setLangHash(key) {
@@ -1677,6 +1707,9 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       const p = parseHash();
       if (p && p.type === 'lang' && languageDatabase[p.key]) {
         if (p.key !== currentDbKey) openLanguage(p.key);
+      } else if (p && p.type === 'quiz' && QUIZ_BUCKETS[p.key]) {
+        openQuiz();
+        showQuizResult(p.key, true);
       } else if (drawer.classList.contains('open')) {
         lockedNode = null; closeDrawer();
       }
@@ -1708,6 +1741,153 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       try { document.execCommand('copy'); cb(); } catch (e) { showToast('复制失败，链接：' + text); }
       document.body.removeChild(ta);
     }
+    /* =========================================================
+       12. 语言人格测试（题库 + 计分 + 结果卡 + 分享深链 #/quiz/<key>） */
+    const QUIZ_BUCKETS = {
+      ie:  { name:'印欧语系', tag:'秩序与扩张者', rep:'法文', color:'#7E8FB0',
+             desc:'你像印欧语系：带着清晰的语法与不安分的好奇，从草原一路扩张到五大洲。秩序是你的铠甲，传播是你的本能。' },
+      st:  { name:'汉藏语系', tag:'厚古的传承者', rep:'中文', color:'#C6A15B',
+             desc:'你像汉藏语系：把几千年的根脉揣在怀里。不急着喧哗，却最经得起时间。含蓄，是你最深的力。' },
+      au:  { name:'南岛语系', tag:'海洋漫游者', rep:'毛利语', color:'#6E9E9A',
+             desc:'你像南岛语系：驾着独木舟横渡太平洋，把家园撒进每座岛屿。浪漫是你的罗盘，远方是你的故乡。' },
+      iso: { name:'孤岛坚守者', tag:'孤岛的守望人', rep:'日文', color:'#B07C9E',
+             desc:'你像日本、巴斯克这样的孤立语言：周围都是海，却自成宇宙。孤独不是软弱，是独一无二的骄傲。' },
+      nc:  { name:'尼日尔-刚果语系', tag:'鼓声里的共同体', rep:'斯瓦希里语', color:'#8A9A6B',
+             desc:'你像尼日尔-刚果语系：在鼓点与合唱中长大。一个人是你的影子，一群人才是你的太阳。' },
+      aa:  { name:'亚非语系', tag:'沙漠与圣典', rep:'阿拉伯文', color:'#B5895B',
+             desc:'你像亚非语系：在风沙与星月之间，把信仰和韵律刻进字母。庄严，是你说话的语气。' },
+      am:  { name:'美洲原住民语系', tag:'大地的孩子', rep:'克丘亚语', color:'#C0785B',
+             desc:'你像美洲原住民语言：脚下是山，口中是神话。不征服自然，而是和它商量着活下去。' },
+      art: { name:'人工语言', tag:'理性的乌托邦', rep:'世界语', color:'#5FA8B0',
+             desc:'你像世界语：相信人类本可以少一些隔阂。理想主义不是天真，是你认真的生活方式。' },
+      sign:{ name:'手语', tag:'手势里的诗', rep:'美国手语', color:'#C07C8A',
+             desc:'你像手语：用双手代替声音，把情绪捏成形状。沉默，也可以很喧闹。' },
+    };
+    const QUIZ_QUESTIONS = [
+      { q:'你理想的周末是？', opts:[
+        { t:'捧一本厚书，泡壶茶，安静地待一整天', w:'st' },
+        { t:'买张机票去海边，认识一群陌生人', w:'au' },
+        { t:'张罗一场热闹的大家庭聚会', w:'nc' },
+        { t:'独自爬山露营，远离信号', w:'iso' },
+      ]},
+      { q:'别人怎么形容你的表达风格？', opts:[
+        { t:'逻辑清晰、条理分明', w:'ie' },
+        { t:'含蓄隽永、意在言外', w:'st' },
+        { t:'手势丰富、很有画面感', w:'sign' },
+        { t:'自带韵律，像在唱歌', w:'au' },
+      ]},
+      { q:'面对一个新环境，你通常？', opts:[
+        { t:'迅速建立规则，让一切井井有条', w:'ie' },
+        { t:'先观察，慢慢找到自己的角落', w:'iso' },
+        { t:'立刻下水，边做边学', w:'au' },
+        { t:'守住老传统，又吸收新东西', w:'aa' },
+      ]},
+      { q:'你更认同哪一种「强大」？', opts:[
+        { t:'疆域广阔、影响深远', w:'ie' },
+        { t:'延续千年、根脉不断', w:'st' },
+        { t:'与土地共生、朴素坚韧', w:'am' },
+        { t:'人人平等、沟通无界', w:'art' },
+      ]},
+      { q:'如果发明一种语言，你最想让它？', opts:[
+        { t:'语法极其严谨，没有歧义', w:'ie' },
+        { t:'用最少的词说出最深的意思', w:'st' },
+        { t:'一说就让人想跳舞', w:'au' },
+        { t:'全世界人一学就会，消除隔阂', w:'art' },
+      ]},
+    ];
+    const QUIZ_PRIORITY = ['ie','st','au','nc','aa','iso','am','art','sign'];
+    const quizOverlay = document.getElementById('quizOverlay');
+    let quizState = null;
+    function openQuiz() {
+      quizState = { step: -1, scores: {} };
+      renderQuizStep();
+      quizOverlay.classList.remove('hidden');
+      requestAnimationFrame(() => quizOverlay.classList.add('show'));
+    }
+    function closeQuiz() {
+      quizOverlay.classList.remove('show');
+      setTimeout(() => quizOverlay.classList.add('hidden'), 280);
+    }
+    function renderQuizStep() {
+      const s = quizState;
+      if (s.step < 0) {
+        quizOverlay.querySelector('.quiz-card').innerHTML = `
+          <div class="quiz-kicker"><i data-lucide="sparkles" class="w-4 h-4"></i> 语言人格测试</div>
+          <h2 class="quiz-title">你是哪种「语言人格」？</h2>
+          <p class="quiz-sub">5 道小题，看看你的性格最接近哪一支人类语系。</p>
+          <button class="quiz-start" data-act="start">开始测试</button>
+          <p class="quiz-foot">结果可一键分享 · 纯前端，无隐私收集</p>`;
+      } else if (s.step < QUIZ_QUESTIONS.length) {
+        const Q = QUIZ_QUESTIONS[s.step];
+        const prog = Math.round((s.step / QUIZ_QUESTIONS.length) * 100);
+        quizOverlay.querySelector('.quiz-card').innerHTML = `
+          <div class="quiz-prog"><div class="quiz-prog-bar" style="width:${prog}%"></div></div>
+          <div class="quiz-count">第 ${s.step + 1} / ${QUIZ_QUESTIONS.length} 题</div>
+          <h2 class="quiz-title">${Q.q}</h2>
+          <div class="quiz-opts">
+            ${Q.opts.map((o, i) => `<button class="quiz-opt" data-w="${o.w}"><span class="quiz-opt-dot">${String.fromCharCode(65 + i)}</span>${o.t}</button>`).join('')}
+          </div>`;
+      } else {
+        showQuizResult(pickQuizResult());
+      }
+      lucide.createIcons();
+    }
+    function pickQuizResult() {
+      const sc = quizState.scores;
+      let best = null, bestV = -1;
+      for (const k of QUIZ_PRIORITY) { const v = sc[k] || 0; if (v > bestV) { bestV = v; best = k; } }
+      return best || 'st';
+    }
+    function showQuizResult(bucketKey, fromHash) {
+      const b = QUIZ_BUCKETS[bucketKey];
+      if (!b) { if (!fromHash) renderQuizStep(); return; }
+      const shareUrl = location.origin + location.pathname + '#/quiz/' + bucketKey;
+      quizOverlay.querySelector('.quiz-card').innerHTML = `
+        <div class="quiz-kicker" style="color:${b.color}"><i data-lucide="award" class="w-4 h-4"></i> 你的语言人格</div>
+        <div class="quiz-result-name" style="color:${b.color}">${b.name}</div>
+        <div class="quiz-result-tag">${b.tag}</div>
+        <p class="quiz-result-desc">${b.desc}</p>
+        <div class="quiz-result-actions">
+          <button class="quiz-retake" data-act="retake">再测一次</button>
+          <button class="quiz-share" data-act="share" data-url="${escAttr(shareUrl)}">复制分享链接</button>
+          <button class="quiz-go" data-act="go" data-rep="${escAttr(b.rep)}" style="background:${b.color}">去认识「${languageDatabase[b.rep].name.split(' ')[0]}」</button>
+        </div>`;
+      lucide.createIcons();
+      if (!fromHash) { _suppressHash = true; location.hash = '#/quiz/' + bucketKey; }
+      quizState.result = bucketKey;
+    }
+    if (quizOverlay) {
+      quizOverlay.addEventListener('click', (e) => {
+        const start = e.target.closest('[data-act="start"]');
+        const opt = e.target.closest('.quiz-opt');
+        const retake = e.target.closest('[data-act="retake"]');
+        const share = e.target.closest('[data-act="share"]');
+        const go = e.target.closest('[data-act="go"]');
+        if (e.target === quizOverlay) { closeQuiz(); return; }
+        if (start) { quizState.step = 0; renderQuizStep(); return; }
+        if (opt) {
+          const w = opt.dataset.w; quizState.scores[w] = (quizState.scores[w] || 0) + 1;
+          quizState.step++; renderQuizStep(); return;
+        }
+        if (retake) { quizState = { step: -1, scores: {} }; renderQuizStep(); return; }
+        if (share) {
+          const url = share.dataset.url;
+          const ok = () => showToast('结果链接已复制，去炫耀你的语言人格吧！');
+          if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok).catch(() => fallbackCopy(url, ok));
+          else fallbackCopy(url, ok);
+          return;
+        }
+        if (go) {
+          const rep = go.dataset.rep;
+          closeQuiz();
+          if (rep && languageDatabase[rep]) openLanguage(rep);
+          return;
+        }
+      });
+    }
+    const quizFab = document.getElementById('quizFab');
+    if (quizFab) quizFab.addEventListener('click', openQuiz);
+
     const shareBtn = document.getElementById('shareBtn');
     if (shareBtn) shareBtn.addEventListener('click', copyShareLink);
     // 首屏：若 URL 携带深链则还原（在图谱稳定后调用，确保节点/镜头就绪）
