@@ -651,7 +651,7 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       const triviaHtml = c.trivia ? `
         <div class="acc-item fade-up" data-acc style="animation-delay:.14s">
           <button class="acc-head" data-acc-head>
-            <span class="flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4 text-emerald/80"></i> 宏观冷知识 · 装b指南</span>
+            <span class="flex items-center gap-2"><i data-lucide="feather" class="w-4 h-4 text-emerald/80"></i> 宏观冷知识 · 装b指南</span>
             <i data-lucide="chevron-down" class="acc-chevron w-4 h-4"></i>
           </button>
           <div class="acc-body"><div><div class="acc-inner">
@@ -1890,7 +1890,7 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       const s = quizState;
       if (s.step < 0) {
         quizOverlay.querySelector('.quiz-card').innerHTML = `
-          <div class="quiz-kicker"><i data-lucide="sparkles" class="w-4 h-4"></i> 语言人格测试</div>
+          <div class="quiz-kicker"><i data-lucide="feather" class="w-4 h-4"></i> 语言人格测试</div>
           <h2 class="quiz-title">你是哪种「语言人格」？</h2>
           <p class="quiz-sub">8 道小题，看看你的性格最接近哪一支人类语系。</p>
           <button class="quiz-start" data-act="start">开始测试</button>
