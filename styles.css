@@ -627,3 +627,40 @@
     .d-shelf-btn:hover { background: rgba(198,161,91,.1); }
     .d-shelf-btn.on { border-style: solid; background: rgba(198,161,91,.16); color: #ECE3D4; }
     .d-shelf-btn.on i { fill: #C6A15B; }
+
+    /* ============ 濒危语言「余烬闪烁」光效 ============ */
+    /* 地图 / 谱系树：SVG 余烬光晕脉动（不规则烛火感） */
+    @keyframes emberPulse {
+      0%   { opacity: .92; transform: scale(1); }
+      18%  { opacity: .36; transform: scale(1.35); }
+      34%  { opacity: .85; transform: scale(1.05); }
+      52%  { opacity: .28; transform: scale(1.55); }
+      68%  { opacity: .72; transform: scale(1.18); }
+      84%  { opacity: .44; transform: scale(1.42); }
+      100% { opacity: .92; transform: scale(1); }
+    }
+    .mpl-ember, .tn-ember {
+      transform-box: fill-box; transform-origin: center; pointer-events: none;
+      animation: emberPulse 1.8s ease-in-out infinite;
+      filter: drop-shadow(0 0 5px rgba(224,107,90,.85));
+    }
+    .mpl.endangered .mpl-dot, .tnode.leaf.endangered .tn-dot { stroke: rgba(255,236,226,.6); stroke-width: 0.8; }
+    .mpl.endangered .mpl-label, .tnode.leaf.endangered .tn-label { fill: #E9C9B6; }
+    /* 抽屉内濒危卡片：呼吸式辉光，强调“正在消失” */
+    @keyframes vitGlow {
+      0%,100% { box-shadow: 0 0 0 1px rgba(214,96,74,.18), 0 0 14px -2px rgba(214,96,74,.12); }
+      50%     { box-shadow: 0 0 0 1px rgba(214,96,74,.42), 0 0 26px 0 rgba(214,96,74,.3); }
+    }
+    .vit-card { animation: vitGlow 2.6s ease-in-out infinite; border-radius: 14px; }
+    .vit-bar { animation: vitBarGlow 2.6s ease-in-out infinite; }
+    @keyframes vitBarGlow {
+      0%,100% { box-shadow: 0 0 8px rgba(214,96,74,.4); }
+      50%     { box-shadow: 0 0 16px rgba(214,96,74,.72); }
+    }
+    /* 濒危模式：缓慢全局烛火明灭，强化「暮色余烬」 */
+    body.endangered-active #duskVeil { animation: duskFlicker 5.5s ease-in-out infinite; }
+    @keyframes duskFlicker {
+      0%,100% { opacity: .82; }
+      45%     { opacity: 1; }
+      70%     { opacity: .68; }
+    }

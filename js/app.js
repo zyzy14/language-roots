@@ -522,7 +522,7 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       // 濒危程度可视化卡片（仅收录了濒危数据的语言展示）
       const vit = VITALITY[dbKey];
       const vitalityCard = vit ? `
-        <div class="fade-up px-4 pt-1 pb-4">
+        <div class="fade-up vit-card px-4 pt-1 pb-4">
           <div class="flex items-center justify-between mb-3">
             <span class="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.2em]" style="color:${vit.color}">
               <i data-lucide="flame" class="w-3.5 h-3.5"></i> 濒危程度
@@ -534,7 +534,7 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
             <span class="text-xs text-slate-500">仍在使用</span>
           </div>
           <div class="mt-3 h-1.5 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.06)">
-            <div class="h-full rounded-full" style="width:${vit.vitality}%;background:linear-gradient(90deg,${vit.color}99,${vit.color});box-shadow:0 0 10px ${vit.color}66"></div>
+            <div class="h-full rounded-full vit-bar" style="width:${vit.vitality}%;background:linear-gradient(90deg,${vit.color}99,${vit.color});box-shadow:0 0 10px ${vit.color}66"></div>
           </div>
           <div class="flex justify-between mt-1 text-[10px] text-slate-600 tracking-wide">
             <span>濒临消失</span><span>语言活力</span><span>稳健存续</span>
@@ -1435,10 +1435,13 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       Object.keys(languageDatabase).forEach(k => {
         const g = geoCentroid(k);
         if (!g) return;
-        const c = langColorOf(k);
+        const isEnd = !!VITALITY[k];
+        const c = isEnd ? dangerColorOf(k) : langColorOf(k);
         const x = projX(g.lon).toFixed(1), y = projY(g.lat).toFixed(1);
         const disp = languageDatabase[k].name.split(' ')[0];
-        html += `<g class="mpl" data-k="${k}" transform="translate(${x},${y})">
+        const dur = (1.1 + Math.random() * 1.3).toFixed(2);
+        html += `<g class="mpl ${isEnd ? 'endangered' : ''}" data-k="${k}" transform="translate(${x},${y})">
+          ${isEnd ? `<circle class="mpl-ember" r="6.6" style="fill:${c};animation-duration:${dur}s"></circle>` : ''}
           <circle class="mpl-halo" r="5.4" style="fill:${c}"></circle>
           <circle class="mpl-dot" r="2.7" style="fill:${c}"></circle>
           <text class="mpl-label" x="4.2" y="1.2">${disp}</text>
@@ -1606,10 +1609,14 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
           edges += `<path class="tedge" data-from="${n.id}" data-to="${c.id}" d="M ${x1} ${y1} C ${x1 + 60} ${y1}, ${x2 - 60} ${y2}, ${x2} ${y2}"/>`;
         }));
         all.forEach(n => {
-          const c = treeNodeColor(n), isLeaf = n.kind === 'leaf';
+          const isLeaf = n.kind === 'leaf';
+          const isEnd = isLeaf && n.dbKey && !!VITALITY[n.dbKey];
+          const c = isEnd ? dangerColorOf(n.dbKey) : treeNodeColor(n);
           const shape = isLeaf ? `<circle class="tn-dot" r="4.5" style="fill:${c}"/>`
                                : `<rect class="tn-box" x="-6" y="-7" width="12" height="14" rx="3" style="fill:${c}"/>`;
-          nodes += `<g class="tnode ${isLeaf ? 'leaf' : 'mid'}" data-id="${n.id}" data-kind="${n.kind}" ${n.dbKey ? `data-k="${n.dbKey}"` : ''} transform="translate(${n.x},${n.y})">
+          const dur = (1.1 + Math.random() * 1.3).toFixed(2);
+          nodes += `<g class="tnode ${isLeaf ? 'leaf' : 'mid'} ${isEnd ? 'endangered' : ''}" data-id="${n.id}" data-kind="${n.kind}" ${n.dbKey ? `data-k="${n.dbKey}"` : ''} transform="translate(${n.x},${n.y})">
+            ${isEnd ? `<circle class="tn-ember" r="6.2" style="fill:${c};animation-duration:${dur}s"></circle>` : ''}
             ${shape}<text class="tn-label" x="9" y="3.6">${n.label}</text></g>`;
         });
         svg.innerHTML = `<g id="treeEdges">${edges}</g><g id="treeNodes">${nodes}</g>`;
@@ -2158,17 +2165,21 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       data.edges.forEach(e => { const toN = data.nodes.get(e.to); const c = nodeColorOf(toN);
         eupd.push({ id: e.id, neon: c, color: { color: EDGE_IDLE, highlight: hexA(c, 0.95), hover: hexA(c, 0.85), inherit: false } }); });
       data.edges.update(eupd);
-      // 地图撒点同步
+      // 地图撒点同步（濒危节点锁定危险色，不被语系配色覆盖）
       document.querySelectorAll('#mapSvg .mpl').forEach(g => {
-        const c = langColorOf(g.dataset.k), dot = g.querySelector('.mpl-dot'), halo = g.querySelector('.mpl-halo');
-        if (dot) dot.style.fill = c; if (halo) halo.style.fill = c;
+        const k = g.dataset.k;
+        const c = VITALITY[k] ? dangerColorOf(k) : langColorOf(k);
+        const dot = g.querySelector('.mpl-dot'), halo = g.querySelector('.mpl-halo'), ember = g.querySelector('.mpl-ember');
+        if (dot) dot.style.fill = c; if (halo) halo.style.fill = c; if (ember) ember.style.fill = c;
       });
       // 谱系树节点同步（若已构建）
       if (treeBuilt) {
         document.querySelectorAll('#treeSvg .tnode').forEach(g => {
           const n = treeNodeById[g.dataset.id]; if (!n) return;
-          const c = treeNodeColor(n), dot = g.querySelector('.tn-dot'), box = g.querySelector('.tn-box');
-          if (dot) dot.style.fill = c; if (box) box.style.fill = c;
+          const isEnd = n.kind === 'leaf' && n.dbKey && VITALITY[n.dbKey];
+          const c = isEnd ? dangerColorOf(n.dbKey) : treeNodeColor(n);
+          const dot = g.querySelector('.tn-dot'), box = g.querySelector('.tn-box'), ember = g.querySelector('.tn-ember');
+          if (dot) dot.style.fill = c; if (box) box.style.fill = c; if (ember) ember.style.fill = c;
         });
       }
       updateLegend();
@@ -2187,6 +2198,41 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
     document.querySelectorAll('[data-color]').forEach(b => b.addEventListener('click', () => applyColorScheme(b.dataset.color)));
     document.querySelector('[data-color="family"]').classList.add('mode-active');
     applyColorScheme('family');   // 初始化图例 + 着色
+
+    /* =========================================================
+       12.5 濒危语言「余烬闪烁」—— 图谱节点(JS 调制阴影) 持续闪烁
+       （地图/树用 SVG CSS 动画，见 styles.css；此处负责 canvas 节点） */
+    const EMBER_NODES = [];
+    data.nodes.forEach(n => {
+      if (n.kind === 'leaf' && n.dbKey && VITALITY[n.dbKey]) {
+        n.endangered = true;
+        n.emberColor = dangerColorOf(n.dbKey);
+        n.vitality = VITALITY[n.dbKey].vitality || 40;
+        n.emberPhase = Math.random() * Math.PI * 2;
+        EMBER_NODES.push(n);
+      }
+    });
+    function emberTick() {
+      if (!EMBER_NODES.length) return;
+      const t = performance.now() / 1000;
+      const upd = [];
+      for (const n of EMBER_NODES) {
+        // 烛火：正弦底光 + 偶发骤暗（活力越低，熄灭越频繁）
+        const base = 0.5 + 0.5 * Math.sin(t * (1.6 + n.vitality / 60) + n.emberPhase);
+        const sputter = Math.random() < (0.02 + (1 - n.vitality / 100) * 0.08) ? Math.random() * 0.6 : 0;
+        const f = Math.max(0.12, base - sputter);
+        const size = 9 + f * 16;
+        const alpha = 0.28 + f * 0.5;
+        upd.push({
+          id: n.id,
+          shadow: { enabled: true, color: hexA(n.emberColor, alpha), size: size, x: 0, y: 0 },
+          color: { background: n.color.background, border: n.emberColor, highlight: n.color.highlight, hover: n.color.hover },
+        });
+      }
+      try { data.nodes.update(upd); } catch (e) {}
+      setTimeout(emberTick, 55);
+    }
+    emberTick();
 
     /* =========================================================
        12. 深浅色主题切换（持久化到 localStorage）
