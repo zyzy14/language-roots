@@ -1803,7 +1803,7 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       au:  { name:'南岛语系', tag:'海洋漫游者', rep:'毛利语', color:'#6E9E9A',
              desc:'你像南岛语系：驾着独木舟横渡太平洋，把家园撒进每座岛屿。浪漫是你的罗盘，远方是你的故乡。' },
       iso: { name:'孤岛坚守者', tag:'孤岛的守望人', rep:'日文', color:'#B07C9E',
-             desc:'你像日本、巴斯克这样的孤立语言：周围都是海，却自成宇宙。孤独不是软弱，是独一无二的骄傲。' },
+             desc:'你像日本、冰岛这样的孤立语言：周围都是海，却自成宇宙。孤独不是软弱，是独一无二的骄傲。' },
       nc:  { name:'尼日尔-刚果语系', tag:'鼓声里的共同体', rep:'斯瓦希里语', color:'#8A9A6B',
              desc:'你像尼日尔-刚果语系：在鼓点与合唱中长大。一个人是你的影子，一群人才是你的太阳。' },
       aa:  { name:'亚非语系', tag:'沙漠与圣典', rep:'阿拉伯文', color:'#B5895B',
@@ -1814,25 +1814,33 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
              desc:'你像世界语：相信人类本可以少一些隔阂。理想主义不是天真，是你认真的生活方式。' },
       sign:{ name:'手语', tag:'手势里的诗', rep:'美国手语', color:'#C07C8A',
              desc:'你像手语：用双手代替声音，把情绪捏成形状。沉默，也可以很喧闹。' },
+      ural:{ name:'乌拉尔语系', tag:'极简留白派', rep:'芬兰语', color:'#5E9E8C',
+             desc:'你像乌拉尔语系（芬兰语、爱沙尼亚语）：用最少的词，留最大的白。复杂的事你说得轻，安静的事你最懂。' },
+      turk:{ name:'突厥语系', tag:'草原游吟派', rep:'土耳其文', color:'#D4A24C',
+             desc:'你像突厥语系：从草原一路迁徙，把商队与歌谣带过半片欧亚。自由，是你驮在马背上的家。' },
+      iran:{ name:'伊朗语支', tag:'绿洲诗旅派', rep:'波斯语', color:'#C07A4B',
+             desc:'你像波斯语：在沙漠绿洲里写诗，把每一个词都打磨成宝石。华丽不是炫耀，是你对美的郑重。' },
+      sea: { name:'东南亚稻田语', tag:'稻田禅意派', rep:'泰文', color:'#9DA95E',
+             desc:'你像泰语、缅甸语这样的东南亚稻田语言：慢半拍，带笑意，把日子过成一首不用急着听懂的歌。' },
     };
     const QUIZ_QUESTIONS = [
       { q:'你理想的周末是？', opts:[
         { t:'捧一本厚书，泡壶茶，安静地待一整天', w:'st' },
-        { t:'买张机票去海边，认识一群陌生人', w:'au' },
+        { t:'买张票去海边，认识一群陌生人', w:'au' },
         { t:'张罗一场热闹的大家庭聚会', w:'nc' },
-        { t:'独自爬山露营，远离信号', w:'iso' },
+        { t:'独自爬山露营，远离一切信号', w:'iso' },
       ]},
       { q:'别人怎么形容你的表达风格？', opts:[
         { t:'逻辑清晰、条理分明', w:'ie' },
         { t:'含蓄隽永、意在言外', w:'st' },
         { t:'手势丰富、很有画面感', w:'sign' },
-        { t:'自带韵律，像在唱歌', w:'au' },
+        { t:'能用三个词绝不用十个，极简留白', w:'ural' },
       ]},
       { q:'面对一个新环境，你通常？', opts:[
         { t:'迅速建立规则，让一切井井有条', w:'ie' },
         { t:'先观察，慢慢找到自己的角落', w:'iso' },
         { t:'立刻下水，边做边学', w:'au' },
-        { t:'守住老传统，又吸收新东西', w:'aa' },
+        { t:'守住老传统，又悄悄吸收新东西', w:'aa' },
       ]},
       { q:'你更认同哪一种「强大」？', opts:[
         { t:'疆域广阔、影响深远', w:'ie' },
@@ -1846,8 +1854,26 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
         { t:'一说就让人想跳舞', w:'au' },
         { t:'全世界人一学就会，消除隔阂', w:'art' },
       ]},
+      { q:'你最怕哪一种「失去」？', opts:[
+        { t:'计划被打乱、一切失去确定感', w:'ie' },
+        { t:'根脉断了，再没人记得老话', w:'st' },
+        { t:'族群离散、故土慢慢荒芜', w:'am' },
+        { t:'人类之间永远消不掉隔阂', w:'art' },
+      ]},
+      { q:'旅行时你最享受？', opts:[
+        { t:'把行程精确到每一分钟', w:'ie' },
+        { t:'钻进当地市集，大吃一顿', w:'nc' },
+        { t:'在绿洲茶馆发一下午的呆', w:'iran' },
+        { t:'一个人安静地整理房间、断舍离', w:'ural' },
+      ]},
+      { q:'你理想中的「家」是？', opts:[
+        { t:'一座井井有条的城市公寓', w:'ie' },
+        { t:'一栋祖传的老院子，门槛都被踩亮', w:'st' },
+        { t:'一间面朝水田、慢悠悠的小屋', w:'sea' },
+        { t:'一顶随时收起的帐篷，跟着商队走', w:'turk' },
+      ]},
     ];
-    const QUIZ_PRIORITY = ['ie','st','au','nc','aa','iso','am','art','sign'];
+    const QUIZ_PRIORITY = ['ie','st','au','nc','aa','iso','am','art','sign','ural','iran','sea','turk'];
     const quizOverlay = document.getElementById('quizOverlay');
     let quizState = null;
     function openQuiz() {
@@ -1866,7 +1892,7 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
         quizOverlay.querySelector('.quiz-card').innerHTML = `
           <div class="quiz-kicker"><i data-lucide="sparkles" class="w-4 h-4"></i> 语言人格测试</div>
           <h2 class="quiz-title">你是哪种「语言人格」？</h2>
-          <p class="quiz-sub">5 道小题，看看你的性格最接近哪一支人类语系。</p>
+          <p class="quiz-sub">8 道小题，看看你的性格最接近哪一支人类语系。</p>
           <button class="quiz-start" data-act="start">开始测试</button>
           <p class="quiz-foot">结果可一键分享 · 纯前端，无隐私收集</p>`;
       } else if (s.step < QUIZ_QUESTIONS.length) {
