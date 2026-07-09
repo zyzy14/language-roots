@@ -126,13 +126,14 @@
   </aside>
 
   <!-- 操作提示 -->
-  <div class="fixed bottom-5 left-5 z-20 px-3 py-2 text-[11px] flex items-center gap-4 tracking-wide" style="color:#7E7460">
+  <div class="fixed bottom-5 left-5 z-20 px-3 py-2 text-[11px] flex items-center gap-4 tracking-wide bottom-hint" style="color:#7E7460">
     <span class="flex items-center gap-1.5"><i data-lucide="mouse-pointer-click" class="w-3 h-3"></i> 单击选中 · 高亮归属并保持</span>
     <span class="hidden sm:flex items-center gap-1.5"><i data-lucide="move" class="w-3 h-3"></i> 可自由拖拽 · 双击取消</span>
   </div>
 
-  <!-- 视图控制 -->
-  <div class="fixed bottom-5 right-5 z-20 flex flex-col gap-1.5" style="color:#7E7460">
+  <!-- 视图控制 + 纯享视图开关 -->
+  <div id="viewCtrls" class="fixed bottom-5 right-5 z-30 flex flex-col gap-1.5" style="color:#7E7460">
+    <button id="focusBtn" class="w-9 h-9 rounded-lg flex items-center justify-center hover:text-[#ECE3D4] hover:bg-white/5 transition-colors" title="纯享视图（隐藏界面，按 Esc 退出）" aria-pressed="false"><i data-lucide="eye" class="w-[18px] h-[18px]"></i></button>
     <button id="zoomIn" class="w-9 h-9 rounded-lg flex items-center justify-center hover:text-[#ECE3D4] hover:bg-white/5 transition-colors"><i data-lucide="plus" class="w-[18px] h-[18px]"></i></button>
     <button id="zoomOut" class="w-9 h-9 rounded-lg flex items-center justify-center hover:text-[#ECE3D4] hover:bg-white/5 transition-colors"><i data-lucide="minus" class="w-[18px] h-[18px]"></i></button>
     <button id="fitBtn" class="w-9 h-9 rounded-lg flex items-center justify-center hover:text-[#ECE3D4] hover:bg-white/5 transition-colors" title="回到全局视图"><i data-lucide="maximize" class="w-[18px] h-[18px]"></i></button>

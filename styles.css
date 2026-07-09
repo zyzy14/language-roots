@@ -478,6 +478,28 @@
       font-size: 11px; font-weight: 700; font-family: "Noto Sans SC", system-ui, sans-serif;
     }
 
+    /* ============ 纯享视图（隐去界面 · 沉浸式看图谱） ============ */
+    #focusBtn.active { color: #ECE3D4; background: rgba(198,161,91,.16); }
+    #focusBtn.active i { color: #C6A15B; }
+    /* 平滑过渡，便于进出时缓动 */
+    .top-toolbar, #fabStack, #legend, .bottom-hint { transition: opacity .4s ease, transform .4s ease; }
+    #zoomIn, #zoomOut, #fitBtn { transition: opacity .4s ease; }
+    /* 进入纯享：除「退出」按钮与抽屉外，隐去所有界面元素 */
+    body.focus .top-toolbar,
+    body.focus #legend,
+    body.focus .bottom-hint,
+    body.focus #fabStack,
+    body.focus #zoomIn,
+    body.focus #zoomOut,
+    body.focus #fitBtn {
+      opacity: 0 !important; pointer-events: none !important;
+    }
+    body.focus .top-toolbar { transform: translateY(-12px); }
+    body.focus .bottom-hint { transform: translateY(12px); }
+    body.focus #fabStack { transform: translateY(12px); }
+    /* 纯享时给图谱一点呼吸边距（工具栏原本占位） */
+    body.focus #graph, body.focus #mapView, body.focus #treeView { transition: opacity .45s cubic-bezier(.4,0,.2,1), transform .45s cubic-bezier(.4,0,.2,1); }
+
     .quiz-overlay {
       position: fixed; inset: 0; z-index: 60; display: flex;
       align-items: center; justify-content: center; padding: 20px;

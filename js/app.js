@@ -1392,6 +1392,27 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       currentViewFit();
     });
 
+    /* =========================================================
+       纯享视图：按下后隐去工具栏/图例/提示/悬浮簇/缩放控件，只留图谱本身
+       —— 再按一次，或按 Esc，退出纯享 —— */
+    const focusBtn = document.getElementById('focusBtn');
+    function setFocus(on) {
+      document.body.classList.toggle('focus', on);
+      focusBtn.classList.toggle('active', on);
+      focusBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      focusBtn.title = on ? '退出纯享视图（按 Esc）' : '纯享视图（隐藏界面，按 Esc 退出）';
+      focusBtn.innerHTML = '<i data-lucide="' + (on ? 'eye-off' : 'eye') + '" class="w-[18px] h-[18px]"></i>';
+      lucide.createIcons();
+    }
+    if (focusBtn) {
+      focusBtn.addEventListener('click', () => setFocus(!document.body.classList.contains('focus')));
+    }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.body.classList.contains('focus')) {
+        setFocus(false);
+      }
+    });
+
     let toastTimer = null;
     function showToast(msg) {
       const t = document.getElementById('toast');
