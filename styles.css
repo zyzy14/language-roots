@@ -317,31 +317,42 @@
        深浅色主题：浅色“羊皮纸”模式覆盖
        —— 整站 Chrome 与图谱配色同步翻转 —— */
     html[data-theme="light"] body {
-      background-color: #F2EBDD; color: #2A2419;
+      background-color: #F4ECDB; color: #2A2419;
       background-image:
-        radial-gradient(54rem 54rem at 16% 10%, rgba(198,161,91,0.10), transparent 62%),
-        radial-gradient(48rem 48rem at 86% 84%, rgba(138,154,107,0.09), transparent 62%),
-        radial-gradient(42rem 42rem at 74% 4%, rgba(176,124,94,0.07), transparent 62%);
+        radial-gradient(120% 120% at 50% 0%, rgba(255,251,242,0.9), transparent 55%),
+        radial-gradient(54rem 54rem at 16% 10%, rgba(198,161,91,0.12), transparent 62%),
+        radial-gradient(48rem 48rem at 86% 84%, rgba(138,154,107,0.10), transparent 62%),
+        radial-gradient(42rem 42rem at 74% 4%, rgba(176,124,94,0.08), transparent 62%),
+        /* 旧纸四角微微发暗，像被翻旧的书页 */
+        radial-gradient(140% 120% at 50% 50%, transparent 62%, rgba(120,96,60,0.10) 100%);
     }
-    html[data-theme="light"] #aurora,
-    html[data-theme="light"] #starfield { opacity: 0.22; }
+    html[data-theme="light"] #aurora { opacity: 0.5; }
+    /* 浅色下用正片叠底让纸纹清晰可见（overlay 在近白底上几乎无变化） */
+    html[data-theme="light"] #starfield { opacity: 0.5; mix-blend-mode: multiply; }
     html[data-theme="light"] body.endangered-active #aurora { filter: blur(46px) saturate(0.5) hue-rotate(-22deg) brightness(1.05); opacity: 0.3; }
 
+    /* 书页边框：内描细线，像古籍版心外的栏线 */
+    html[data-theme="light"] body::after {
+      content: ''; position: fixed; inset: 16px; z-index: 2; pointer-events: none;
+      border: 1px solid rgba(120,100,70,0.20);
+      box-shadow: inset 0 0 0 4px rgba(255,252,245,0.45), inset 0 0 40px rgba(120,96,60,0.06);
+    }
+
     /* 工具栏文字与图标（内联色用 !important 压制） */
-    html[data-theme="light"] .tt-title { color: #2A2419 !important; }
+    html[data-theme="light"] .tt-title { color: #2A2419 !important; letter-spacing: 0.06em; text-shadow: 0 1px 0 rgba(255,255,255,0.55); }
     html[data-theme="light"] .tt-sub { color: #7A6F58 !important; }
     html[data-theme="light"] .tt-input { color: #2A2419 !important; }
     html[data-theme="light"] #searchInput::placeholder { color: #B5A890 !important; }
     html[data-theme="light"] #searchShell i,
     html[data-theme="light"] #searchBtn { color: #9A8C72 !important; }
-    html[data-theme="light"] #searchShell { background: rgba(242,235,221,0.42); border: none; box-shadow: inset 0 0 0 1px rgba(160,140,100,0.12); }
+    html[data-theme="light"] #searchShell { background-color: rgba(244,236,221,0.55); background-image: var(--grain); background-size: 180px 180px; background-blend-mode: multiply; border: none; box-shadow: inset 0 0 0 1px rgba(160,140,100,0.16); }
     html[data-theme="light"] #searchShell:focus-within { background: rgba(242,235,221,0.72); box-shadow: inset 0 0 0 1px rgba(176,138,46,.28), 0 2px 16px -4px rgba(0,0,0,.08); }
 
     /* 切换器外观 */
     html[data-theme="light"] #modeSwitch,
     html[data-theme="light"] #viewSwitch,
     html[data-theme="light"] #colorSwitch {
-      background: rgba(255,253,247,0.72); border-color: rgba(120,100,70,0.28);
+      background-color: rgba(255,253,247,0.78); background-image: var(--grain); background-size: 180px 180px; background-blend-mode: multiply; border-color: rgba(120,100,70,0.28);
     }
     html[data-theme="light"] .mode-btn { color: #6B5F48; }
     html[data-theme="light"] .mode-btn:hover { color: #2A2419; }
@@ -362,8 +373,9 @@
 
     /* 抽屉（羊皮纸面板） */
     html[data-theme="light"] #drawer {
-      background: rgba(250,246,238,0.95); border-left: 1px solid #E3DAC8;
-      box-shadow: -30px 0 90px -24px rgba(80,64,40,0.35);
+      background-color: #F6EFE0; background-image: var(--grain); background-size: 180px 180px; background-blend-mode: multiply;
+      border-left: 1px solid #D8CDB4;
+      box-shadow: -30px 0 90px -24px rgba(80,64,40,0.35), inset 1px 0 0 rgba(176,138,46,0.18);
     }
     html[data-theme="light"] #d-name { color: #2A2419 !important; }
     html[data-theme="light"] #d-eyebrow { color: #7A6F58 !important; }
@@ -389,8 +401,9 @@
 
     /* 筛选侧栏 */
     html[data-theme="light"] #filterPanel {
-      background: rgba(250,246,238,0.97); border-right: 1px solid #E3DAC8;
-      box-shadow: 30px 0 90px -30px rgba(80,64,40,0.35);
+      background-color: #F6EFE0; background-image: var(--grain); background-size: 180px 180px; background-blend-mode: multiply;
+      border-right: 1px solid #D8CDB4;
+      box-shadow: 30px 0 90px -30px rgba(80,64,40,0.35), inset -1px 0 0 rgba(176,138,46,0.14);
     }
     html[data-theme="light"] .fp-head > span { color: #2A2419 !important; }
     html[data-theme="light"] .fp-title { color: #8E8470 !important; }
@@ -404,7 +417,8 @@
 
     /* 搜索预测下拉 */
     html[data-theme="light"] #searchSuggest {
-      background: rgba(250,246,238,0.98); border-color: #E3DAC8;
+      background-color: #F6EFE0; background-image: var(--grain); background-size: 180px 180px; background-blend-mode: multiply;
+      border-color: #D8CDB4;
       box-shadow: 0 26px 64px -22px rgba(80,64,40,0.4);
     }
     html[data-theme="light"] .sg-head { color: #8E8470 !important; }

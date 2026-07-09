@@ -2298,10 +2298,14 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       applyColorScheme(colorScheme);   // 刷新节点/连线（含主题字体色）/地图/图例
     }
     const themeBtn = document.getElementById('themeBtn');
-    if (themeBtn) themeBtn.addEventListener('click', () => applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'));
-    // 初始主题（优先读取用户偏好）
-    let _savedTheme = 'dark';
-    try { _savedTheme = localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark'; } catch (e) {}
+    if (themeBtn) themeBtn.addEventListener('click', () => { applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'); try { localStorage.setItem('lr-theme-explicit', '1'); } catch (e) {} });
+    // 初始主题：默认浅色羊皮纸「旧书·档案馆」；仅当用户显式切换过才沿用其选择
+    let _savedTheme = 'light';
+    try {
+      if (localStorage.getItem('lr-theme-explicit') === '1') {
+        _savedTheme = localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light';
+      }
+    } catch (e) {}
     applyTheme(_savedTheme);
 
     lucide.createIcons();
