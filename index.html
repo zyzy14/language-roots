@@ -6,7 +6,9 @@
   <title>语言寻根 · Language Roots</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1610'/%3E%3Cg fill='none' stroke='%23C6A15B' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M16 25V11'/%3E%3Cpath d='M16 18c0-3 2-5 6-5'/%3E%3Cpath d='M16 15c0-3-2-5-6-5'/%3E%3Cpath d='M16 11V7'/%3E%3Cpath d='M16 25c-2 0-4-1-5-3'/%3E%3Cpath d='M16 25c2 0 4-1 5-3'/%3E%3C/g%3E%3C/svg%3E" />
 
-  <!-- 人文字体：思源宋体（标题·厚重）+ 思源黑体（正文·温润） -->
+  <!-- 自托管字体（毛笔楷书 + EB Garamond），沙箱预览与部署均可渲染 -->
+  <link rel="stylesheet" href="fonts.css">
+  <!-- 思源黑体/宋体作为正文基础字体（仅在可访问 Google Fonts 时生效，否则回退系统字体） -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -24,10 +26,12 @@
         extend: {
           // 暖墨底色 + 赭金/鼠尾草绿的克制主色（复古人文调）
           colors: { base: '#17140F', brand: '#C6A15B', emerald: '#8A9A6B' },
-          fontFamily: {
-            sans: ['"Noto Sans SC"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
-            serif: ['"Noto Serif SC"', 'Georgia', '"Songti SC"', 'serif'],
-          },
+      fontFamily: {
+        sans: ['"Noto Sans SC"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['"EB Garamond"', '"Noto Serif SC"', 'Georgia', '"Songti SC"', 'serif'],
+        brush: ['"Ma Shan Zheng"', '"Noto Serif SC"', 'cursive'],
+        latin: ['"EB Garamond"', 'Georgia', 'serif'],
+      },
         },
       },
     };
@@ -50,7 +54,7 @@
         <svg viewBox="0 0 24 24" class="w-[18px] h-[18px]" fill="none" stroke="#C6A15B" stroke-width="1.6" stroke-linecap="round"><path d="M12 21V8"/><path d="M12 14c0-3 2-5 6-5"/><path d="M12 11c0-3-2-5-6-5"/><path d="M12 8V4"/><path d="M12 21c-2 0-4-1-5-3"/><path d="M12 21c2 0 4-1 5-3"/></svg>
       </div>
       <div>
-        <p class="font-serif font-semibold text-[18px] tracking-wide leading-none tt-title" style="color:#ECE3D4">语言寻根</p>
+        <p class="font-brush text-[24px] leading-none tt-title" style="color:#ECE3D4">语言寻根</p>
         <p class="text-[11px] mt-1.5 tracking-wide tt-sub" style="color:#8A7F6A">每一种语言，都是一个族群凝望世界的方式 · 收录 68 种</p>
       </div>
     </div>

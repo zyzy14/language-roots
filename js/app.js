@@ -49,7 +49,39 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       }).join('');
     }
 
-    // (f) 完整地图 HTML（点阵底图 + 当前语言的高亮标记 + GPS Loading）
+    // (f1) 了解更多外链 HTML
+    function buildLinksHTML(L) {
+      if (!L.links || !L.links.length) return '';
+      // 维基百科单独提取为醒目按钮
+      const wiki = L.links.find(l => l.label === '维基百科');
+      const others = L.links.filter(l => l.label !== '维基百科');
+      const wikiBtn = wiki ? `
+        <a href="${wiki.url}" target="_blank" rel="noopener" class="wiki-btn">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          <span>在维基百科上查看「${L.name ? L.name.split('(')[0].trim() : ''}」</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5 wiki-btn-arrow"></i>
+        </a>
+      ` : '';
+      const otherChips = others.length ? others.map(l => `
+        <a href="${l.url}" target="_blank" rel="noopener" class="link-chip">
+          <i data-lucide="${l.icon || 'external-link'}" class="w-3.5 h-3.5"></i>
+          <span>${l.label}</span>
+          <i data-lucide="arrow-up-right" class="w-3 h-3 link-chip-arrow"></i>
+        </a>
+      `).join('') : '';
+      return `
+        <div class="fade-up px-4 pt-1 pb-4" style="animation-delay:.03s">
+          <div class="flex items-center gap-1.5 mb-2.5 text-brand/80">
+            <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+            <span class="text-[10px] font-semibold uppercase tracking-[0.2em]">了解更多</span>
+          </div>
+          ${wikiBtn}
+          ${otherChips ? `<div class="flex flex-wrap gap-2 mt-2">${otherChips}</div>` : ''}
+        </div>
+      `;
+    }
+
+    // (f2) 完整地图 HTML（点阵底图 + 当前语言的高亮标记 + GPS Loading）
     function buildMapHTML(dbKey) {
       return `
         <svg class="map-svg" viewBox="0 0 360 180" preserveAspectRatio="xMidYMid meet">
@@ -559,6 +591,9 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
         </div>
 
         ${vitalityCard}
+
+        <!-- 了解更多（外链跳转） -->
+        ${buildLinksHTML(L)}
 
         <!-- 第二层（默认展开）：全息像素地图 —— 点击语言即见分布 -->
         <div class="acc-item fade-up" data-acc data-acc-map style="animation-delay:.06s">

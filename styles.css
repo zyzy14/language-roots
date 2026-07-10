@@ -1,35 +1,80 @@
     :root {
       /* 纸面颗粒：SVG 分形噪声，营造印刷品/手作质感，而非数字辉光 */
       --grain: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='180'%20height='180'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.85'%20numOctaves='2'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23n)'%20opacity='0.4'/%3E%3C/svg%3E");
+      /* 字体系统：毛笔楷书(题字) + 衬线(中文宋体/西文 Garamond) + 黑体(界面) */
+      --font-sans: "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      --font-serif: "EB Garamond", "Noto Serif SC", Georgia, "Songti SC", serif;
+      --font-brush: "Ma Shan Zheng", "Noto Serif SC", cursive;
+      --font-latin: "EB Garamond", Georgia, serif;
     }
     html, body { height: 100%; margin: 0; overflow: hidden; }
     body {
       background-color: #17140F; color: #E8E0D2;   /* 暖墨底 + 暖象牙字 */
       letter-spacing: 0.012em;
+      font-family: var(--font-sans);
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
       /* 温润的暖光晕，像旧书页与烛光，取代冷调霓虹 */
       background-image:
         radial-gradient(54rem 54rem at 16% 10%, rgba(198,161,91,0.07), transparent 62%),
         radial-gradient(48rem 48rem at 86% 84%, rgba(138,154,107,0.06), transparent 62%),
         radial-gradient(42rem 42rem at 74% 4%, rgba(176,124,94,0.05), transparent 62%);
     }
-    /* 纸面颗粒：取代冷冽星点，像一张被翻旧的世界语言地图 */
+    /* 纸面颗粒：极缓游移，像光在旧纸上微微浮动 */
     #starfield {
       position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .35;
       background-image: var(--grain); background-size: 180px 180px;
       mix-blend-mode: overlay;
+      animation: grainDrift 40s linear infinite;
+      will-change: transform;
+    }
+    @keyframes grainDrift {
+      0%   { transform: translate(0, 0) rotate(0deg); }
+      25%  { transform: translate(6px, -4px) rotate(0.15deg); }
+      50%  { transform: translate(-4px, 7px) rotate(-0.1deg); }
+      75%  { transform: translate(-7px, -3px) rotate(0.08deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
     }
 
-    /* 静置的暖光晕（无流动光斑，像一盏旧台灯），取代流动的极光 */
-    #aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    /* 题字：毛笔楷书，像古籍书名的手写题字 */
+    .tt-title { font-family: var(--font-brush); font-weight: 400; }
+    html[data-theme="light"] .tt-title { letter-spacing: 0.04em; }
+    /* 标题下方极淡金辉呼吸，像烫金在不同光角下的微光变化 */
+    .top-toolbar {
+      animation: titleGlow 8s ease-in-out infinite;
+    }
+    @keyframes titleGlow {
+      0%, 100% { text-shadow: none; }
+      50%      { text-shadow: 0 0 18px rgba(198,161,91,0.12); }
+    }
+
+    /* 温润光晕，像窗边自然光在纸面上缓缓移动 */
+    #aurora {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      animation: auroraBreath 14s ease-in-out infinite;
+    }
     #aurora::before {
       content: ''; position: absolute; inset: 0;
       background:
         radial-gradient(60rem 50rem at 18% 6%, rgba(198,161,91,0.055), transparent 60%),
         radial-gradient(52rem 46rem at 86% 94%, rgba(138,154,107,0.045), transparent 60%);
+      animation: auroraShift 20s ease-in-out infinite;
+    }
+    @keyframes auroraBreath {
+      0%, 100% { opacity: 0.72; }
+      50%      { opacity: 1; }
+    }
+    @keyframes auroraShift {
+      0%   { transform: scale(1) translate(0, 0); }
+      33%  { transform: scale(1.04) translate(6px, -8px); }
+      66%  { transform: scale(0.97) translate(-5px, 6px); }
+      100% { transform: scale(1) translate(0, 0); }
     }
     /* 尊重系统「减少动态效果」偏好 */
     @media (prefers-reduced-motion: reduce) {
       #starfield { animation: none !important; }
+      #aurora, #aurora::before { animation: none !important; }
+      .top-toolbar { animation: none !important; }
     }
 
     /* 濒危模式：温和的暮色/烛光氛围（突出濒危但不刺眼） */
@@ -121,17 +166,26 @@
       overflow: hidden;
       margin: 2px 0 0;
     }
+    html[data-theme="light"] #language-map-container {
+      background:
+        radial-gradient(120% 120% at 50% 30%, rgba(236,228,214,0.55) 0%, rgba(244,238,228,0.92) 70%);
+      border-color: rgba(176,138,46,0.22);
+      box-shadow: inset 0 0 24px rgba(80,64,40,0.12);
+    }
     .map-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
     /* 经纬网格线 */
     .map-grid { stroke: rgba(198,161,91,0.10); stroke-width: 0.4; }
+    html[data-theme="light"] .map-grid { stroke: rgba(120,100,70,0.12); }
     /* 大陆点阵：默认清晰可辨大陆轮廓（暖石色） */
     .map-dot { fill: #8C8069; opacity: 0.5; transition: opacity .6s ease; }
+    html[data-theme="light"] .map-dot { fill: #9A8C70; opacity: 0.5; }
     /* 地图区域标记（未激活时暗淡） */
     .map-land {
       fill: #64748B;
       opacity: 0.35;
       transition: fill 0.5s ease, opacity .5s ease, filter 0.5s ease;
     }
+    html[data-theme="light"] .map-land { fill: #B0A588; opacity: 0.5; }
     /* 动态高亮激活：颜色由 JS 按语系注入 + 呼吸灯 */
     .map-land.active-highlight {
       opacity: 1;
@@ -149,13 +203,19 @@
       background: rgba(9, 13, 22, 0.35);
       transition: opacity 0.45s ease;
     }
+    html[data-theme="light"] .map-loading { background: rgba(244,236,221,0.35); }
     .map-loading.done { opacity: 0; pointer-events: none; }
     .map-loading-text { font-size: 10px; letter-spacing: 0.24em; color: #D4B77E; text-transform: uppercase; }
+    html[data-theme="light"] .map-loading-text { color: #9A6F1E; }
     .map-scan {
       position: absolute; top: 0; left: 0; width: 100%; height: 2px;
       background: linear-gradient(90deg, transparent, #C6A15B, transparent);
       box-shadow: 0 0 12px #C6A15B;
       animation: scanMove 1.1s linear infinite;
+    }
+    html[data-theme="light"] .map-scan {
+      background: linear-gradient(90deg, transparent, #B08A2E, transparent);
+      box-shadow: 0 0 12px #B08A2E;
     }
     @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
 
@@ -164,7 +224,7 @@
     .acc-head {
       width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
       padding: 14px 16px; cursor: pointer; background: transparent; border: none;
-      color: #C9BEA8; font-size: 13.5px; letter-spacing: 0.08em; font-family: "Noto Serif SC", Georgia, serif; transition: color .25s ease;
+      color: #C9BEA8; font-size: 13.5px; letter-spacing: 0.08em; font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; transition: color .25s ease;
     }
     .acc-head:hover { color: #F1E9DA; }
     .acc-head .acc-chevron { transition: transform .45s cubic-bezier(0.22,1,0.36,1); color: #8A7F6A; }
@@ -179,6 +239,10 @@
     #searchInput::placeholder { color: #6B6152; font-size: 14px; letter-spacing: .02em; }
     /* 搜索输入框：暗色模式下透明底色，不透白 */
     .tt-input { background: transparent !important; -webkit-text-fill-color: #ECE3D4; caret-color: #C6A15B; }
+    /* 抽屉档案抬头：西文 Garamond 斜体小型大写，像典籍边栏的拉丁注脚 */
+    #d-eyebrow { font-family: var(--font-latin); font-style: italic; letter-spacing: .14em; text-transform: uppercase; }
+    /* 抽屉正文（冷知识/发音/梗）改用衬线，像在读一页书而非看 UI 标签 */
+    #d-body .acc-inner { font-family: var(--font-serif); line-height: 1.85; }
     /* 快捷标签暖色 */
     .quick-tag { color: #8A7F6A; }
     .quick-tag:hover { color: #ECE3D4; border-color: rgba(198,161,91,0.35) !important; }
@@ -196,7 +260,7 @@
     .sg-item { display: flex; align-items: center; gap: 10px; padding: 8px 14px; cursor: pointer; }
     .sg-item.active, .sg-item:hover { background: rgba(198,161,91,0.10); }
     .sg-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; box-shadow: 0 0 6px -1px currentColor; }
-    .sg-name { color: #E8E0D2; font-size: 14px; font-family: "Noto Serif SC", Georgia, serif; }
+    .sg-name { color: #E8E0D2; font-size: 14px; font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; }
     .sg-name b { color: #E8D5A8; font-weight: 700; }
     .sg-en { color: #8A7F6A; font-size: 11px; margin-left: 2px; }
     .sg-tag { font-size: 10px; padding: 1px 7px; border-radius: 999px; margin-left: 6px; white-space: nowrap; }
@@ -213,7 +277,7 @@
     #d-body .text-sky-300   { color: #9CC3BF !important; }   /* 分布 → 松石 */
     #d-body .text-purple-300{ color: #B79BC0 !important; }   /* 语法梗 → 藕荷 */
     /* 卡片小标题用宋体，添厚重感 */
-    #d-body .uppercase { font-family: "Noto Serif SC", Georgia, serif; }
+    #d-body .uppercase { font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; }
     /* 冷色描边工具类在暖背景下的兜底 */
     .border-white\/8 { border-color: rgba(233,224,208,0.08) !important; }
 
@@ -438,9 +502,6 @@
     html[data-theme="light"] #mapView {
       background: radial-gradient(120% 120% at 50% 42%, rgba(236,228,214,0.55), rgba(244,238,228,0.97) 76%);
     }
-    html[data-theme="light"] .map-dot { fill: #9A8C70; opacity: 0.5; }
-    html[data-theme="light"] .map-grid { stroke: rgba(120,100,70,0.12); }
-    html[data-theme="light"] .map-land { fill: #B0A588; opacity: 0.5; }
 
     /* =========================================================
        移动端适配
@@ -479,12 +540,96 @@
       border-radius: 999px; cursor: pointer;
       border: 1px solid rgba(198,161,91,.35);
       background: rgba(30,25,18,0.96);
-      color: #ECE3D4; font-family: "Noto Serif SC", Georgia, serif; font-size: 14px;
+      color: #ECE3D4; font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; font-size: 14px;
       box-shadow: 0 8px 28px rgba(0,0,0,.42);
       transition: transform .2s, box-shadow .2s;
     }
     #quizFab:hover, #drawFab:hover, #shelfFab:hover { transform: translateY(-2px); box-shadow: 0 12px 34px rgba(0,0,0,.55); }
     #quizFab i, #drawFab i, #shelfFab i { width: 18px; height: 18px; color: #C6A15B; }
+
+    /* ============ 了解更多外链芯片 ============ */
+    .link-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 12px;
+      font-size: 13px; font-family: var(--font-serif);
+      color: #C6A15B;
+      background: rgba(198,161,91,0.08);
+      border: 1px solid rgba(198,161,91,0.22);
+      text-decoration: none;
+      transition: all .2s ease;
+    }
+    .link-chip:hover {
+      background: rgba(198,161,91,0.18);
+      border-color: rgba(198,161,91,0.5);
+      color: #E8D5A8;
+      transform: translateY(-1px);
+    }
+    .link-chip-arrow { opacity: 0.5; transition: opacity .2s; }
+    .link-chip:hover .link-chip-arrow { opacity: 1; }
+    html[data-theme="light"] .link-chip {
+      color: #9A6F1E;
+      background: rgba(176,138,46,0.08);
+      border-color: rgba(176,138,46,0.22);
+    }
+    html[data-theme="light"] .link-chip:hover {
+      background: rgba(176,138,46,0.18);
+      border-color: rgba(176,138,46,0.5);
+      color: #6B4E14;
+    }
+
+    /* 维基百科按钮：醒目横条，是「了解更多」区块的主角 */
+    .wiki-btn {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 12px 16px; border-radius: 13px;
+      font-size: 14px; font-family: var(--font-serif);
+      color: #ECE3D4;
+      background: linear-gradient(135deg, rgba(198,161,91,0.14), rgba(198,161,91,0.06));
+      border: 1px solid rgba(198,161,91,0.28);
+      text-decoration: none;
+      transition: all .25s ease;
+    }
+    .wiki-btn i { color: #C6A15B; flex-shrink: 0; }
+    .wiki-btn span { flex: 1; }
+    .wiki-btn-arrow { opacity: 0.45; transition: opacity .2s, transform .2s; }
+    .wiki-btn:hover {
+      background: linear-gradient(135deg, rgba(198,161,91,0.22), rgba(198,161,91,0.10));
+      border-color: rgba(198,161,91,0.5);
+      transform: translateY(-1px);
+    }
+    .wiki-btn:hover .wiki-btn-arrow { opacity: 1; transform: translate(2px, -2px); }
+    html[data-theme="light"] .wiki-btn {
+      color: #3A3326;
+      background: linear-gradient(135deg, rgba(176,138,46,0.10), rgba(176,138,46,0.04));
+      border-color: rgba(176,138,46,0.25);
+    }
+    html[data-theme="light"] .wiki-btn i { color: #9A6F1E; }
+    html[data-theme="light"] .wiki-btn:hover {
+      background: linear-gradient(135deg, rgba(176,138,46,0.18), rgba(176,138,46,0.08));
+      border-color: rgba(176,138,46,0.5);
+    }
+
+    /* 浅色主题：FAB 翻为暖纸色，像羊皮纸上的蜡封印章 */
+    html[data-theme="light"] #quizFab,
+    html[data-theme="light"] #drawFab,
+    html[data-theme="light"] #shelfFab {
+      background: rgba(255,253,247,0.88);
+      background-image: var(--grain); background-size: 180px 180px; background-blend-mode: multiply;
+      border-color: rgba(176,138,46,.45);
+      color: #3A3326;
+      box-shadow: 0 8px 28px rgba(80,64,40,.18);
+    }
+    html[data-theme="light"] #quizFab:hover,
+    html[data-theme="light"] #drawFab:hover,
+    html[data-theme="light"] #shelfFab:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 34px rgba(80,64,40,.28);
+    }
+    html[data-theme="light"] #quizFab i,
+    html[data-theme="light"] #drawFab i,
+    html[data-theme="light"] #shelfFab i { color: #9A6F1E; }
+    html[data-theme="light"] .fab-badge {
+      background: #B08A2E; color: #fff;
+    }
     .fab-badge {
       margin-left: 2px; min-width: 18px; height: 18px; padding: 0 5px;
       display: inline-flex; align-items: center; justify-content: center;
@@ -533,13 +678,13 @@
     .quiz-overlay.show .quiz-card { transform: none; }
     .quiz-kicker {
       display: flex; align-items: center; gap: 6px; font-size: 12px;
-      letter-spacing: .18em; text-transform: uppercase; color: #C6A15B; margin-bottom: 12px;
+      font-family: var(--font-serif); letter-spacing: .05em; text-transform: uppercase; color: #C6A15B; margin-bottom: 12px;
     }
-    .quiz-title { font-family: "Noto Serif SC", Georgia, serif; font-size: 25px; font-weight: 600; line-height: 1.3; margin-bottom: 10px; }
+    .quiz-title { font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; font-size: 25px; font-weight: 600; line-height: 1.3; margin-bottom: 10px; }
     .quiz-sub { font-size: 14px; color: #9A8F79; margin-bottom: 22px; line-height: 1.6; }
     .quiz-start {
       width: 100%; padding: 13px; border-radius: 14px; border: none; cursor: pointer;
-      font-family: "Noto Serif SC", Georgia, serif; font-size: 16px; font-weight: 600;
+      font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; font-size: 16px; font-weight: 600;
       background: linear-gradient(180deg, #C6A15B, #A8853F); color: #1a140b; transition: transform .15s;
     }
     .quiz-start:hover { transform: translateY(-1px); }
@@ -559,7 +704,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 12px; font-weight: 700; background: rgba(198,161,91,.2); color: #C6A15B;
     }
-    .quiz-result-name { font-family: "Noto Serif SC", Georgia, serif; font-size: 34px; font-weight: 700; line-height: 1.2; }
+    .quiz-result-name { font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; font-size: 34px; font-weight: 700; line-height: 1.2; }
     .quiz-result-tag {
       display: inline-block; margin-top: 8px; padding: 4px 12px; border-radius: 99px;
       font-size: 13px; background: rgba(255,255,255,.07); color: #cdbfa6;
@@ -568,7 +713,7 @@
     .quiz-result-actions { display: flex; flex-wrap: wrap; gap: 10px; }
     .quiz-result-actions button {
       flex: 1 1 auto; padding: 12px 14px; border-radius: 12px; cursor: pointer; font-size: 14px;
-      font-family: "Noto Serif SC", Georgia, serif; border: 1px solid rgba(255,255,255,.12);
+      font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.05); color: #ECE3D4; transition: all .15s;
     }
     .quiz-result-actions .quiz-retake { flex-basis: 100%; }
@@ -583,22 +728,22 @@
     .draw-card { width: min(520px, 100%); max-height: 88vh; overflow-y: auto; background: #1C1710; background-image: var(--grain); background-size: 180px 180px; background-blend-mode: overlay; border: 1px solid rgba(198,161,91,.28); border-radius: 22px; padding: 30px 28px; color: #ECE3D4; box-shadow: 0 30px 80px rgba(0,0,0,.55); transform: translateY(12px) scale(.98); transition: transform .3s; }
     .draw-overlay.show .draw-card { transform: none; }
     .draw-kicker { display: flex; align-items: center; gap: 6px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #C6A15B; margin-bottom: 12px; }
-    .draw-title { font-family: "Noto Serif SC", Georgia, serif; font-size: 25px; font-weight: 600; line-height: 1.3; margin-bottom: 10px; }
+    .draw-title { font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; font-size: 25px; font-weight: 600; line-height: 1.3; margin-bottom: 10px; }
     .draw-sub { font-size: 14px; color: #9A8F79; margin-bottom: 22px; line-height: 1.6; }
-    .draw-roll { width: 100%; padding: 13px; border-radius: 14px; border: none; cursor: pointer; font-family: "Noto Serif SC", Georgia, serif; font-size: 16px; font-weight: 600; background: linear-gradient(180deg, #C6A15B, #A8853F); color: #1a140b; transition: transform .15s; }
+    .draw-roll { width: 100%; padding: 13px; border-radius: 14px; border: none; cursor: pointer; font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; font-size: 16px; font-weight: 600; background: linear-gradient(180deg, #C6A15B, #A8853F); color: #1a140b; transition: transform .15s; }
     .draw-roll:hover { transform: translateY(-1px); }
     .draw-foot { text-align: center; font-size: 11.5px; color: #6d6453; margin-top: 14px; }
     .draw-shuffle { display: flex; align-items: center; justify-content: center; min-height: 130px; }
-    .draw-shuffle-name { font-family: "Noto Serif SC", Georgia, serif; font-size: 34px; font-weight: 700; color: #ECE3D4; text-align: center; padding: 0 10px; }
+    .draw-shuffle-name { font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; font-size: 34px; font-weight: 700; color: #ECE3D4; text-align: center; padding: 0 10px; }
     .draw-shuffle-tip { text-align: center; font-size: 12px; color: #8A7F6A; margin-top: 10px; letter-spacing: .05em; }
     .draw-reveal { animation: drawPop .42s ease; }
     @keyframes drawPop { 0% { transform: scale(.92); opacity: .35; } 100% { transform: scale(1); opacity: 1; } }
     .draw-reveal-family { display: inline-block; padding: 4px 12px; border-radius: 99px; font-size: 13px; margin-bottom: 10px; border: 1px solid; }
-    .draw-result-name { font-family: "Noto Serif SC", Georgia, serif; font-size: 34px; font-weight: 700; line-height: 1.2; }
+    .draw-result-name { font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; font-size: 34px; font-weight: 700; line-height: 1.2; }
     .draw-result-punch { font-size: 15px; line-height: 1.75; color: #cdc3b0; margin: 14px 0 16px; }
     .draw-result-phrase { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); margin-bottom: 18px; }
     .draw-result-actions { display: flex; gap: 10px; }
-    .draw-result-actions button { flex: 1 1 auto; padding: 12px 14px; border-radius: 12px; cursor: pointer; font-size: 14px; font-family: "Noto Serif SC", Georgia, serif; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05); color: #ECE3D4; transition: all .15s; }
+    .draw-result-actions button { flex: 1 1 auto; padding: 12px 14px; border-radius: 12px; cursor: pointer; font-size: 14px; font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05); color: #ECE3D4; transition: all .15s; }
     .draw-again:hover { background: rgba(255,255,255,.12); }
     .draw-detail { border: none; color: #15110a; font-weight: 600; }
     .draw-detail:hover { filter: brightness(1.08); }
@@ -612,7 +757,7 @@
     .shelf-card { width: min(540px, 100%); max-height: 86vh; overflow-y: auto; background: #1C1710; background-image: var(--grain); background-size: 180px 180px; background-blend-mode: overlay; border: 1px solid rgba(198,161,91,.28); border-radius: 22px; padding: 26px 26px 28px; color: #ECE3D4; box-shadow: 0 30px 80px rgba(0,0,0,.55); transform: translateY(12px) scale(.98); transition: transform .3s; }
     .shelf-overlay.show .shelf-card { transform: none; }
     .shelf-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 10px; }
-    .shelf-title { display: flex; align-items: center; gap: 8px; font-family: "Noto Serif SC", Georgia, serif; font-size: 20px; font-weight: 600; }
+    .shelf-title { display: flex; align-items: center; gap: 8px; font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; font-size: 20px; font-weight: 600; }
     .shelf-title i { color: #C6A15B; }
     .shelf-count { font-size: 12px; padding: 1px 9px; border-radius: 99px; background: rgba(198,161,91,.18); color: #C6A15B; }
     .shelf-clear { font-size: 12px; color: #9A8F79; padding: 5px 11px; border-radius: 9px; border: 1px solid rgba(255,255,255,.12); background: transparent; cursor: pointer; transition: all .15s; }
@@ -636,7 +781,7 @@
     .shelf-empty-sub { font-size: 13px; color: #7E7460; margin-top: 8px; line-height: 1.6; }
 
     /* ============ 抽屉内「收藏到语言架」按钮 ============ */
-    .d-shelf-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px; border-radius: 12px; cursor: pointer; font-size: 14px; font-family: "Noto Serif SC", Georgia, serif; border: 1px dashed rgba(198,161,91,.4); background: transparent; color: #C6A15B; transition: all .15s; margin-bottom: 4px; }
+    .d-shelf-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 11px; border-radius: 12px; cursor: pointer; font-size: 14px; font-family: "EB Garamond", "Noto Serif SC", Georgia, serif; border: 1px dashed rgba(198,161,91,.4); background: transparent; color: #C6A15B; transition: all .15s; margin-bottom: 4px; }
     .d-shelf-btn:hover { background: rgba(198,161,91,.1); }
     .d-shelf-btn.on { border-style: solid; background: rgba(198,161,91,.16); color: #ECE3D4; }
     .d-shelf-btn.on i { fill: #C6A15B; }

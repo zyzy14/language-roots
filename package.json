@@ -1,0 +1,9 @@
+{
+  "name": "language-roots",
+  "version": "1.0.0",
+  "description": "语言寻根 · 全球语言谱系馆",
+  "scripts": {
+    "build": "node scripts/build-data.js && echo '构建完成'"
+  },
+  "private": true
+}
