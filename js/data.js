@@ -22,7 +22,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=French%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "fawen fayu french"
   },
   "意大利文": {
     "name": "意大利语 (Italian)",
@@ -46,7 +47,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Italian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "yidaliwen yidaliyu italian"
   },
   "德文": {
     "name": "德语 (German)",
@@ -70,7 +72,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=German%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "dewen deyu german"
   },
   "俄文": {
     "name": "俄语 (Russian)",
@@ -94,7 +97,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Russian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "ewen eyu russian"
   },
   "印地文": {
     "name": "印地语 (Hindi)",
@@ -118,7 +122,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Hindi%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "yindiwen yindiyu hindi"
   },
   "中文": {
     "name": "汉语/中文 (Chinese/Mandarin)",
@@ -142,7 +147,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Chinese%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "zhongwen hanyu chinese mandarin"
   },
   "藏文": {
     "name": "藏语 (Tibetan)",
@@ -166,7 +172,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Tibetan%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "zangwen zangyu tibetan"
   },
   "日文": {
     "name": "日语 (Japanese)",
@@ -190,7 +197,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Japanese%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "riwen riyu japanese"
   },
   "韩文": {
     "name": "韩语/朝鲜语 (Korean)",
@@ -214,7 +222,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Korean%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "hanwen hanyu korean"
   },
   "阿拉伯文": {
     "name": "阿拉伯语 (Arabic)",
@@ -238,7 +247,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Arabic%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "alabowen alaboyu arabic"
   },
   "希伯来文": {
     "name": "希伯来语 (Hebrew)",
@@ -262,7 +272,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Hebrew%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "xibolaiwen xibolaiyu hebrew"
   },
   "印度尼西亚文": {
     "name": "印度尼西亚语 (Indonesian)",
@@ -286,7 +297,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Indonesian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "印度尼西亚文"
   },
   "越南文": {
     "name": "越南语 (Vietnamese)",
@@ -310,7 +322,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Vietnamese%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "yuenanwen yuenanyu vietnamese"
   },
   "匈牙利文": {
     "name": "匈牙利语 (Hungarian)",
@@ -334,7 +347,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Hungarian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "匈牙利文"
   },
   "土耳其文": {
     "name": "土耳其语 (Turkish)",
@@ -358,7 +372,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Turkish%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "tuerqiwen tuerqiyu turkish"
   },
   "巴斯克文": {
     "name": "巴斯克语 (Basque)",
@@ -382,7 +397,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Basque%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "巴斯克文"
   },
   "瑞典文": {
     "name": "瑞典语 (Swedish)",
@@ -406,7 +422,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Swedish%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "瑞典文"
   },
   "西班牙文": {
     "name": "西班牙语 (Spanish)",
@@ -430,7 +447,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Spanish%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "xibanyawen xibanyayu spanish"
   },
   "高棉文": {
     "name": "高棉语/柬埔寨语 (Khmer)",
@@ -454,7 +472,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Khmer%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "高棉文"
   },
   "泰文": {
     "name": "泰语 (Thai)",
@@ -478,7 +497,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Thai%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "taiwen taiyu thai"
   },
   "斯瓦希里语": {
     "name": "斯瓦希里语 (Swahili / Kiswahili)",
@@ -502,7 +522,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Swahili%20/%20Kiswahili%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "siwaxiliyu swahili"
   },
   "祖鲁语": {
     "name": "祖鲁语 (Zulu / isiZulu)",
@@ -526,7 +547,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Zulu%20/%20isiZulu%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "zuluyu zulu"
   },
   "纳瓦霍语": {
     "name": "纳瓦霍语 (Navajo / Diné bizaad)",
@@ -550,7 +572,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Navajo%20/%20Din%C3%A9%20bizaad%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "nawahuoyu navajo"
   },
   "毛利语": {
     "name": "毛利语 (Māori)",
@@ -574,7 +597,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=M%C4%81ori%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "maoliyu maori"
   },
   "英语": {
     "name": "英语 (English)",
@@ -598,7 +622,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=English%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "英语"
   },
   "荷兰语": {
     "name": "荷兰语 (Dutch)",
@@ -622,7 +647,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Dutch%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "helanyu dutch"
   },
   "挪威语": {
     "name": "挪威语 (Norwegian)",
@@ -646,7 +672,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Norwegian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "nuoweiyu norwegian"
   },
   "丹麦语": {
     "name": "丹麦语 (Danish)",
@@ -670,7 +697,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Danish%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "danmaiyu danish"
   },
   "冰岛语": {
     "name": "冰岛语 (Icelandic)",
@@ -694,7 +722,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Icelandic%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "bingdaoyu icelandic"
   },
   "葡萄牙语": {
     "name": "葡萄牙语 (Portuguese)",
@@ -718,7 +747,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Portuguese%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "葡萄牙语"
   },
   "罗马尼亚语": {
     "name": "罗马尼亚语 (Romanian)",
@@ -742,7 +772,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Romanian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "luomaniyayu romanian"
   },
   "乌克兰语": {
     "name": "乌克兰语 (Ukrainian)",
@@ -766,7 +797,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Ukrainian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "wukelanyu ukrainian"
   },
   "波兰语": {
     "name": "波兰语 (Polish)",
@@ -790,7 +822,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Polish%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "bolanyu polish"
   },
   "捷克语": {
     "name": "捷克语 (Czech)",
@@ -814,7 +847,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Czech%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "jieke czech"
   },
   "塞尔维亚语": {
     "name": "塞尔维亚语 (Serbian)",
@@ -838,7 +872,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Serbian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "saierweiyayu serbian"
   },
   "保加利亚语": {
     "name": "保加利亚语 (Bulgarian)",
@@ -862,7 +897,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Bulgarian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "baojialiyayu bulgarian"
   },
   "波斯语": {
     "name": "波斯语 (Persian / Farsi)",
@@ -886,7 +922,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Persian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "bosiyu bosiyu persian farsi"
   },
   "希腊语": {
     "name": "希腊语 (Greek)",
@@ -910,7 +947,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Greek%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "希腊语"
   },
   "缅甸语": {
     "name": "缅甸语 (Burmese)",
@@ -934,7 +972,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Burmese%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "miandianyu burmese"
   },
   "约鲁巴语": {
     "name": "约鲁巴语 (Yoruba)",
@@ -958,7 +997,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Yoruba%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "yuelubayu yoruba"
   },
   "绍纳语": {
     "name": "绍纳语 (Shona)",
@@ -982,7 +1022,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Shona%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "绍纳语"
   },
   "切罗基语": {
     "name": "切罗基语 (Cherokee)",
@@ -1006,7 +1047,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Cherokee%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "qieluojiyu cherokee"
   },
   "玛雅语": {
     "name": "玛雅语 (Maya)",
@@ -1030,7 +1072,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Maya%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "玛雅语"
   },
   "克丘亚语": {
     "name": "克丘亚语 (Quechua)",
@@ -1054,7 +1097,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Quechua%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "克丘亚语"
   },
   "芬兰语": {
     "name": "芬兰语 (Finnish)",
@@ -1078,7 +1122,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Finnish%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "fenlanyu finnish"
   },
   "爱沙尼亚语": {
     "name": "爱沙尼亚语 (Estonian)",
@@ -1102,7 +1147,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Estonian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "aishaniyayu estonian"
   },
   "阿伊努语": {
     "name": "阿伊努语 (Ainu)",
@@ -1126,7 +1172,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Ainu%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "阿伊努语"
   },
   "夏威夷语": {
     "name": "夏威夷语 (Hawaiian / ʻŌlelo Hawaiʻi)",
@@ -1150,7 +1197,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Hawaiian%20/%20%CA%BB%C5%8Clelo%20Hawai%CA%BBi%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "夏威夷语"
   },
   "威尔士语": {
     "name": "威尔士语 (Welsh / Cymraeg)",
@@ -1174,7 +1222,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Welsh%20/%20Cymraeg%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "weiershiyu welsh"
   },
   "爱尔兰语": {
     "name": "爱尔兰语 (Irish / Gaeilge)",
@@ -1198,7 +1247,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Irish%20/%20Gaeilge%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "aierlanyu irish"
   },
   "布列塔尼语": {
     "name": "布列塔尼语 (Breton / Brezhoneg)",
@@ -1222,7 +1272,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Breton%20/%20Brezhoneg%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "布列塔尼语"
   },
   "苏格兰盖尔语": {
     "name": "苏格兰盖尔语 (Scottish Gaelic / Gàidhlig)",
@@ -1246,7 +1297,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Scottish%20Gaelic%20/%20G%C3%A0idhlig%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "sugelangaieryu scottish gaelic"
   },
   "格陵兰语": {
     "name": "格陵兰语 (Greenlandic / Kalaallisut)",
@@ -1270,7 +1322,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Greenlandic%20/%20Kalaallisut%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "格陵兰语"
   },
   "纳瓦特尔语": {
     "name": "纳瓦特尔语 (Nahuatl)",
@@ -1294,7 +1347,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Nahuatl%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "纳瓦特尔语"
   },
   "泰米尔语": {
     "name": "泰米尔语 (Tamil)",
@@ -1318,7 +1372,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Tamil%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "taimieryu tamil"
   },
   "粤语": {
     "name": "粤语 (Cantonese)",
@@ -1342,7 +1397,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Cantonese%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "粤语"
   },
   "孟加拉语": {
     "name": "孟加拉语 (Bengali)",
@@ -1366,7 +1422,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Bengali%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "mengjialayu bengali"
   },
   "豪萨语": {
     "name": "豪萨语 (Hausa)",
@@ -1390,7 +1447,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Hausa%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "haosayu hausa"
   },
   "蒙古语": {
     "name": "蒙古语 (Mongolian)",
@@ -1414,7 +1472,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Mongolian%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "蒙古语"
   },
   "马来语": {
     "name": "马来语 (Malay)",
@@ -1438,7 +1497,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Malay%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "马来语"
   },
   "普什图语": {
     "name": "普什图语 (Pashto)",
@@ -1462,7 +1522,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Pashto%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "普什图语"
   },
   "梵语": {
     "name": "梵语 (Sanskrit)",
@@ -1486,7 +1547,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Sanskrit%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "梵语"
   },
   "世界语": {
     "name": "世界语 (Esperanto)",
@@ -1510,7 +1572,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Esperanto%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "shijieyu esperanto"
   },
   "美国手语": {
     "name": "美国手语 (American Sign Language / ASL)",
@@ -1534,7 +1597,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=American%20Sign%20Language%20/%20ASL%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "meiguoshouyu asl american sign"
   },
   "瓜拉尼语": {
     "name": "瓜拉尼语 (Guaraní)",
@@ -1558,7 +1622,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Guaran%C3%AD%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "gualaniyu guarani"
   },
   "阿姆哈拉语": {
     "name": "阿姆哈拉语 (Amharic / አማርኛ)",
@@ -1582,7 +1647,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Amharic%20/%20%E1%8A%A0%E1%88%9B%E1%88%AD%E1%8A%9B%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "amuhalayu amharic"
   },
   "菲律宾语": {
     "name": "菲律宾语 (Filipino / Tagalog)",
@@ -1606,7 +1672,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Filipino%20/%20Tagalog%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "feilvbin tagalog filipino"
   },
   "海地克里奥尔语": {
     "name": "海地克里奥尔语 (Haitian Creole / Kreyòl)",
@@ -1630,7 +1697,8 @@ const languageDatabase = {
         "url": "https://www.youtube.com/results?search_query=Haitian%20Creole%20/%20Krey%C3%B2l%20language%20language%20learning",
         "icon": "video"
       }
-    ]
+    ],
+    "pinyin": "haidikeerhaier haitian creole"
   }
 };
 const categoryDatabase = {

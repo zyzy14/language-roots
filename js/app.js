@@ -1268,8 +1268,10 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
       const L = languageDatabase[key];
       const disp = L.name.split(' ')[0];
       const en = L.name.toLowerCase();
+      const py = (L.pinyin || '').toLowerCase();
       if (key.startsWith(q) || disp.startsWith(q)) return 100;
       if (en.startsWith(q) || en.includes('(' + q) || en.includes('/ ' + q)) return 92;
+      if (py.includes(q)) return 85;   // 拼音匹配（如 zhongwen → 中文）
       if (key.includes(q) || disp.includes(q)) return 74;
       if (en.includes(q)) return 62;
       if (((LEAF_PATHS[key] || [])[0] || '').toLowerCase().includes(q)) return 42;
@@ -2159,8 +2161,8 @@ const inLand = (lat, lon) => LAND_BOXES.some(b => lat <= b[0] && lat >= b[1] && 
         ? `<div class="shelf-list">${arr.map(shelfRow).join('')}</div>`
         : `<div class="shelf-empty">
              <i data-lucide="book-heart" class="w-10 h-10"></i>
-             <p>你的语言架还空着。</p>
-             <p class="shelf-empty-sub">翻开任意语言卡点 ⭐，或去「语言抽卡」遇见缘分。</p>
+             <p>书架还是空的</p>
+             <p class="shelf-empty-sub">每门语言都是一扇通往新世界的门。<br>去「语言抽卡」邂逅第一扇，或点开任意语言按 ⭐ 收藏。</p>
            </div>`;
       shelfOverlay.querySelector('.shelf-card').innerHTML = `
         <div class="shelf-head">
